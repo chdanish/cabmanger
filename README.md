@@ -31,4 +31,3 @@ I have also added a login controller to resource app incase someone dont want sh
 
 # curl  -v http://localhost:8998/login -H 'Content-Type: application/json; charset=UTF-8' --data-binary '{"username":"john","password":"123"}'
 
-
