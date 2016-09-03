@@ -1,7 +1,10 @@
 package com.RestSecureOath.controller;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.BinaryOperator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,22 +21,28 @@ public class LoginController {
 	@Autowired
 	@Qualifier("remoteLogin")
 	private RemoteLogin remoteLogin;
+	
+	String username,password;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/loginx", method = RequestMethod.POST)
     public Map<String, String> getResource(@RequestBody Map<String,String> authenticationRequest) {
     	
-    	Boolean usernamecheck = authenticationRequest.get("username") != null  & authenticationRequest.get("username") !=""  ? true : false ;
-    	Boolean passwordcheck = authenticationRequest.get("password") != null  & authenticationRequest.get("password") !=""  ? true : false ;
-    	if(usernamecheck & passwordcheck){
-    		String username = authenticationRequest.get("username") ;
-    		String password = authenticationRequest.get("password") ;
-    		
-        	
+
+			authenticationRequest.entrySet().parallelStream()
+			.filter(e-> e.getKey()!=null&&e.getKey()!="")
+			.filter(e-> e.getValue()!=null&&e.getValue()!="")
+			.reduce((t,u)->{
+				if(t.getKey()=="username" && username ==null) username=t.getValue();
+				if(u.getKey()=="password" && password ==null) password=u.getValue();
+				return t;});
+
             Map<String, String> resource = new HashMap<String, String>();
+            if(username !=null&& password!=null){
             resource.put("Authorization", remoteLogin.restTemplate(username, password).getAccessToken().getValue());
+            username =null; password=null;
             return resource;
-    		
-    	} else return null;
+            }else  resource.put("fail", "Bad Input");
+            return resource;
      }
 
 }
