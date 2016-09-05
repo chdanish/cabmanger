@@ -36,7 +36,6 @@ public class RemoteLoginImpl implements RemoteLogin{
         resource.setClientSecret(clientSecret);
         resource.setGrantType(grantType);
         resource.setScope(scopes);
-
         resource.setUsername(username);
         resource.setPassword(password);
         resource.setAuthenticationScheme(AuthenticationScheme.form);

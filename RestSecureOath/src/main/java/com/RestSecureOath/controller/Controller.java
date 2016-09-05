@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@PreAuthorize("hasRole('ROLE_USER') OR hasRole('ROLE_ADMIN') AND #oauth2.hasScope('read')")
+@PreAuthorize("hasRole('ROLE_OWNER') OR hasRole('ROLE_ADMIN') AND #oauth2.hasScope('read')")
 @RestController
 @RequestMapping("/api")
 public class Controller {

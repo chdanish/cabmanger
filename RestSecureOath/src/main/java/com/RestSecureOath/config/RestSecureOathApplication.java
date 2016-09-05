@@ -12,13 +12,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
+import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 
 import com.RestSecureOath.domain.Activity;
 import com.RestSecureOath.domain.Company;
@@ -45,11 +53,9 @@ import javassist.bytecode.ByteArray;
 
 
 @SpringBootApplication
-@EnableAutoConfiguration
 @EntityScan("com.RestSecureOath.domain")
 @EnableJpaRepositories("com.RestSecureOath.repo")
 @ComponentScan("com.RestSecureOath")
-@EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration {
  
@@ -59,7 +65,12 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
     }
 
 	public static void main(String[] args) {
-		SpringApplication.run(RestSecureOathApplication.class, args);
+		//SpringApplication.run(RestSecureOathApplication.class, args);
+		Object [] sources = {RestSecureOathApplication.class
+				,SecurityConfig.class
+				};
+		SpringApplication.run(sources, args);
+
 	}
 	
 	@Autowired
@@ -69,7 +80,13 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 	public Server h2WebServer() throws SQLException {
 		return Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082");
 	}
-	
+	@Bean
+	public FreeMarkerConfigurationFactoryBean freemarkerConfiguration(){
+		FreeMarkerConfigurationFactoryBean free = new FreeMarkerConfigurationFactoryBean();
+		free.setTemplateLoaderPath("/WEB-INF/freemarker/");
+		return free;
+	}
+
 
 	@Bean
 	@Order(-100)
@@ -121,5 +138,23 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 	}
 	
 	//http://blogs.sourceallies.com/2012/02/hibernate-date-vs-timestamp/
+	
+	@Configuration
+	@EnableResourceServer
+	protected static class ResourceServerConfiguration
+	    extends ResourceServerConfigurerAdapter {
+
+		@Override
+		public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+			resources.resourceId("RestSecureOath");
+		}
+		
+	  @Override
+	  public void configure(HttpSecurity http) throws Exception {
+	    http
+	      .antMatcher("/api/**")
+	      .authorizeRequests().anyRequest().authenticated();
+	  }
+	}
 	
 }
