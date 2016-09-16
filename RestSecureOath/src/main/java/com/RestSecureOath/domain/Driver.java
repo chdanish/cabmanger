@@ -3,12 +3,15 @@
  */
 package com.RestSecureOath.domain;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -26,29 +29,33 @@ public class Driver extends User {
 	private static final long serialVersionUID = 6594919893586156345L;
 
 	@Column(name="nationalid")
-	private String NationalID;
+	private String nationalID;
 	
 	@Column(name="nationalid_expiry")
-	private Date NationalID_expiry;
+	private Date nationalID_expiry;
 	
 	@Column(name="nationalid_snap")
-	private byte[] NationalID_snap;
+	private byte[] nationalID_snap;
 	
 	@Column(name="licenseid")
-	private String LicenseID;
+	private String licenseID;
 	
 	@Column(name="licenseid_snap")
-	private byte[] LicenseID_snap;
+	private byte[] licenseID_snap;
 	
 	@Column(name="licenseid_expiry")
-	private Date LicenseID_expiry; 
+	private Date licenseID_expiry; 
 	
 
-	@OneToMany(mappedBy="activityID",targetEntity=Activity.class)
+	@OneToMany(mappedBy="activityID",targetEntity=Activity.class,orphanRemoval=true)
 	private Set<Activity> activity= new HashSet<Activity>(0);
 	
 	@Column(name="refuel")
 	private Refuel refuel;
+	
+	@Column(name="compid")
+	Long compID;
+	
 	/**
 	 * 
 	 */
@@ -81,15 +88,16 @@ public class Driver extends User {
 	 * Hard coded role
 	 */
 	public Driver( String userName, String password, String email, String firstName,
-			String lastName, int enabled, Company company,String nationalID, Date nationalID_expiry, byte[] nationalID_snap, String licenseID,
+			String lastName, int enabled, Company company,String snap,String nationalID, Date nationalID_expiry, byte[] nationalID_snap, String licenseID,
 			byte[] licenseID_snap, Date licenseID_expiry) {
-		super( userName, password, email, firstName, lastName, Roles.DRIVER, enabled, company);
-		NationalID = nationalID;
-		NationalID_expiry = nationalID_expiry;
-		NationalID_snap = nationalID_snap;
-		LicenseID = licenseID;
-		LicenseID_snap = licenseID_snap;
-		LicenseID_expiry = licenseID_expiry;
+		super( userName, password, email, firstName, lastName, Roles.DRIVER, enabled, company,snap);
+		this.nationalID = nationalID;
+		this.nationalID_expiry = nationalID_expiry;
+		this.nationalID_snap = nationalID_snap;
+		this.licenseID = licenseID;
+		this.licenseID_snap = licenseID_snap;
+		this.licenseID_expiry = licenseID_expiry;
+		this.compID=company.getCompanyId();
 	}
 	
 	
@@ -105,52 +113,88 @@ public class Driver extends User {
 	 */
 
 
+	/**
+	 * @return the nationalID
+	 */
 	public String getNationalID() {
-		return NationalID;
+		return nationalID;
 	}
 
+	/**
+	 * @param nationalID the nationalID to set
+	 */
 	public void setNationalID(String nationalID) {
-		NationalID = nationalID;
+		this.nationalID = nationalID;
 	}
 
+	/**
+	 * @return the nationalID_expiry
+	 */
 	public Date getNationalID_expiry() {
-		return NationalID_expiry;
+		return nationalID_expiry;
 	}
 
+	/**
+	 * @param nationalID_expiry the nationalID_expiry to set
+	 */
 	public void setNationalID_expiry(Date nationalID_expiry) {
-		NationalID_expiry = nationalID_expiry;
+		this.nationalID_expiry = nationalID_expiry;
 	}
 
+	/**
+	 * @return the nationalID_snap
+	 */
 	public byte[] getNationalID_snap() {
-		return NationalID_snap;
+		return nationalID_snap;
 	}
 
+	/**
+	 * @param nationalID_snap the nationalID_snap to set
+	 */
 	public void setNationalID_snap(byte[] nationalID_snap) {
-		NationalID_snap = nationalID_snap;
+		this.nationalID_snap = nationalID_snap;
 	}
 
+	/**
+	 * @return the licenseID
+	 */
 	public String getLicenseID() {
-		return LicenseID;
+		return licenseID;
 	}
 
+	/**
+	 * @param licenseID the licenseID to set
+	 */
 	public void setLicenseID(String licenseID) {
-		LicenseID = licenseID;
+		this.licenseID = licenseID;
 	}
 
+	/**
+	 * @return the licenseID_snap
+	 */
 	public byte[] getLicenseID_snap() {
-		return LicenseID_snap;
+		return licenseID_snap;
 	}
 
+	/**
+	 * @param licenseID_snap the licenseID_snap to set
+	 */
 	public void setLicenseID_snap(byte[] licenseID_snap) {
-		LicenseID_snap = licenseID_snap;
+		this.licenseID_snap = licenseID_snap;
 	}
 
+	/**
+	 * @return the licenseID_expiry
+	 */
 	public Date getLicenseID_expiry() {
-		return LicenseID_expiry;
+		return licenseID_expiry;
 	}
 
+	/**
+	 * @param licenseID_expiry the licenseID_expiry to set
+	 */
 	public void setLicenseID_expiry(Date licenseID_expiry) {
-		LicenseID_expiry = licenseID_expiry;
+		this.licenseID_expiry = licenseID_expiry;
 	}
 
 	/**
@@ -163,8 +207,8 @@ public class Driver extends User {
 	/**
 	 * @param activity the activity to set
 	 */
-	public void setActivity(Activity activity) {
-		this.activity.add(activity);
+	public void setActivity(Set<Activity> activity) {
+		this.activity = activity;
 	}
 
 	/**
@@ -182,11 +226,31 @@ public class Driver extends User {
 	}
 
 	/**
-	 * @param activity the activity to set
+	 * @return the compID
 	 */
-	public void setActivity(Set<Activity> activity) {
-		this.activity = activity;
+	public Long getCompID() {
+		return compID;
+	}
+
+	/**
+	 * @param compID the compID to set
+	 */
+	public void setCompID(Long compID) {
+		this.compID = compID;
 	}
 	
+
+
 	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Driver [NationalID=" + nationalID + ", NationalID_expiry=" + nationalID_expiry + ", NationalID_snap="
+				+ Arrays.toString(nationalID_snap) + ", LicenseID=" + licenseID + ", LicenseID_snap="
+				+ Arrays.toString(licenseID_snap) + ", LicenseID_expiry=" + licenseID_expiry + ", activity=" + activity
+				+ ", refuel=" + refuel + "]";
+	}
 }

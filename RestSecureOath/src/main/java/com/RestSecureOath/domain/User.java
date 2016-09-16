@@ -7,6 +7,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
+
+import com.RestSecureOath.util.CustomDateSerializer;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Entity
 @Table(name = "USER")
 public class User implements Serializable {
@@ -20,6 +24,7 @@ public class User implements Serializable {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_at",updatable=false,nullable=false)
+	@JsonSerialize(using=CustomDateSerializer.class)
 	private Date createdAT;
 
 	@Column(name = "username",unique = true)
@@ -37,6 +42,9 @@ public class User implements Serializable {
 	@Column(name = "lastname")
 	private String lastName;
 	
+	@Column(name="user_snap",length=8000)
+	private String snap;
+	
 	@ElementCollection(targetClass = Roles.class,fetch = FetchType.EAGER)
 	@CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "userid"))
 	@Column(name = "roles", nullable = false)
@@ -48,6 +56,7 @@ public class User implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="companyid", nullable = false)
+	@JsonBackReference
 	Company company;
 
 	public User(){
@@ -68,6 +77,7 @@ public class User implements Serializable {
 		this.roles=user.getRoles();
 		this.company=user.getCompany();
 		this.createdAT=new Date();
+		this.snap=user.getSnap();
 	}
 	
 
@@ -79,9 +89,10 @@ public class User implements Serializable {
 	 * @param lastName
 	 * @param roles
 	 * @param enabled
+	 * @param snap 
 	 */
 	public User( String userName, String password, String email, String firstName, String lastName,
-			Roles roles, int enabled,Company company) {
+			Roles roles, int enabled,Company company, String snap) {
 		super();
 		this.userName = userName;
 		this.password = password;
@@ -92,6 +103,7 @@ public class User implements Serializable {
 		this.enabled = enabled;
 		this.company=company;
 		this.createdAT=new Date();
+		this.snap=snap;
 	}
 
 	public int getEnabled() {
@@ -185,14 +197,34 @@ public class User implements Serializable {
 	public void setCreatedAT(Date createdAT) {
 		this.createdAT = createdAT;
 	}
+	
+	
+
+	/**
+	 * @return the snap
+	 */
+	public String getSnap() {
+		return snap;
+	}
+
+	/**
+	 * @param snap the snap to set
+	 */
+	public void setSnap(String snap) {
+		this.snap = snap;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", password=" + password + ", email=" + email
-				+ ", firstName=" + firstName + ", lastName=" + lastName + ", roles=" + roles + ", enabled=" + enabled
-				+ ", company=" + company + "]";
+		return "User [userId=" + userId + ", createdAT=" + createdAT + ", userName=" + userName + ", password="
+				+ password + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + ", roles="
+				+ roles + ", enabled=" + enabled + ", company=" + company + "]";
 	}
+
+	
+
+	
 }

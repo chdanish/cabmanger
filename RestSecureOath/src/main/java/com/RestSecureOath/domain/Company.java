@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +20,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.RestSecureOath.util.CustomDateSerializer;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * @author chdanish
@@ -41,26 +50,29 @@ public class Company implements Serializable {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_at",updatable=false,nullable=false)
+	@JsonSerialize(using=CustomDateSerializer.class)
 	private Date createdAT;
 	
 	@Column(name="companyname")
-	String name;
+	private String name;
 	
-	@Column(name="company_regisration")
-	String Regisration;
+	@Column(name="company_registration")
+	private String registration;
 	
 	@Column(name = "distance_unit")
 	@Enumerated(EnumType.STRING)
 	private Distance_Unit distanceunit;
 	
-	@Column(name = "fuele_unit")
+	@Column(name = "fuel_unit")
 	@Enumerated(EnumType.STRING)
 	private Fuel_Unit fuelunit;
 	
-	@OneToMany(mappedBy="company")
+	@OneToMany(mappedBy="company",orphanRemoval=true)
+	@JsonManagedReference
 	private Set<User> user = new HashSet<User>(0);
 	
-	@OneToMany(mappedBy="company",targetEntity=Vehicle.class)
+	@OneToMany(mappedBy="company",targetEntity=Vehicle.class,orphanRemoval=true)
+	@JsonManagedReference
 	private Set<Vehicle> vehicle = new HashSet<Vehicle>(0);
 
 	
@@ -84,7 +96,7 @@ public class Company implements Serializable {
 	 * @param companyId the companyId to set
 	 */
 	public void setCompanyId(Long companyId) {
-		CompanyId = companyId;
+		this.CompanyId = companyId;
 	}
 
 	/**
@@ -105,14 +117,14 @@ public class Company implements Serializable {
 	 * @return the regisration
 	 */
 	public String getRegisration() {
-		return Regisration;
+		return registration;
 	}
 
 	/**
 	 * @param regisration the regisration to set
 	 */
-	public void setRegisration(String regisration) {
-		Regisration = regisration;
+	public void setRegisration(String registration) {
+		this.registration = registration;
 	}
 
 	/**
@@ -199,13 +211,18 @@ public class Company implements Serializable {
 		this.vehicle = vehicle;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "Company [CompanyId=" + CompanyId + ", createdAT=" + createdAT + ", name=" + name + ", Regisration="
-				+ Regisration + ", distanceunit=" + distanceunit + ", fuelunit=" + fuelunit + ", user=" + user
-				+ ", vehicle=" + vehicle + "]";
+		return "Company [" + (CompanyId != null ? "CompanyId=" + CompanyId + ", " : "")
+				+ (createdAT != null ? "createdAT=" + createdAT + ", " : "")
+				+ (name != null ? "name=" + name + ", " : "")
+				+ (registration != null ? "Regisration=" + registration + ", " : "")
+				+ (distanceunit != null ? "distanceunit=" + distanceunit + ", " : "")
+				+ (fuelunit != null ? "fuelunit=" + fuelunit + ", " : "") 
+				+ (vehicle != null ? "vehicle=" + vehicle : "") + "]";
 	}
+
+	
+
+
 }

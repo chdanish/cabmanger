@@ -3,6 +3,8 @@
 <head>
 <!-- <link type="text/css" rel="stylesheet" href="/wro/wro.css"/> -->
 <link type="text/css" rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
@@ -22,11 +24,14 @@
 		There was a problem logging in. Please try again.
 	</div>
 </#if>
+<div ng-hide="true">
+	<button type="button" id="loader" ng-click="pushupdate()" class="btn btn-default" >Edit</button>
+</div>
 	<div ng-controller="navigation as tab" class="container">
 		<ul class="nav nav-pills" role="tablist">
-			<li ng-class="{active:tab.isSet(1)}"><a href ng-click="tab.setTab(1)">login</a></li>
-            <li ng-class="{active:tab.isSet(2)}"><a href ng-click="tab.setTab(2)">SignUp</a></li>
-            <li><a href ng-click="facebookauth()">Login with facebook</a></li>
+			<li  ng-class="{active:tab.isSet(1)}"><a id="login" href ng-click="tab.setTab(1)">login</a></li>
+            <li  ng-class="{active:tab.isSet(2)}"><a id="signup" href ng-click="tab.setTab(2)">SignUp</a></li>
+           <!--  <li><a href ng-click="facebookauth()">Login with facebook</a></li> -->
 		</ul>
 	
 		<div ng-show="tab.isSet(1)">
@@ -109,12 +114,12 @@
 				  </span>
 				</div>
 			  </div>
-			  <div class="form-group">
+			 <!--  <div class="form-group">
 			    <label class="col-sm-2 control-label">Role:</label>
 			    <div class="col-sm-10">
 			    <input type="text" ng-model="role" placeholder="Role to be added">
 			    </div>
-			  </div>
+			  </div> -->
 			</form>
 			
 			<hr>
@@ -126,6 +131,7 @@
 	</div>
 <!-- 	<script src="js/wro.js" type="text/javascript"></script>
 	<script src="staticjs/angular-bootstrap.js" type="text/javascript"></script> -->
-	<script src="static/staticjs/hello.js"></script><!-- remove static if loading fail -->
+	<script src="static/staticjs/hello.js" type="text/javascript"></script><!-- remove static if loading fail -->
+	<script src="static/staticjs/service/cacheService.js" type="text/javascript"></script>
 </body>
 </html>

@@ -17,6 +17,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.RestSecureOath.util.CustomDateSerializer;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 @Entity
 @Table(name = "VEHICLE")
 public class Vehicle implements Serializable {
@@ -32,6 +37,7 @@ public class Vehicle implements Serializable {
 	private Long vehicleId;	
 	
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonSerialize(using=CustomDateSerializer.class)
 	Date createdAT;
 	
 	@Column(name="make")
@@ -42,13 +48,16 @@ public class Vehicle implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="companyid", nullable = false)
+	@JsonBackReference
 	private Company company;
 	
-	@OneToMany(mappedBy="activityID",targetEntity=Activity.class)
+	@OneToMany(mappedBy="activityID",targetEntity=Activity.class,orphanRemoval=true)
+	@JsonManagedReference
 	private Set<Activity> activity= new HashSet<Activity>(0);
 	
-	@OneToMany(mappedBy="refuelId",targetEntity=Refuel.class)
-	private Set<Refuel> ride = new HashSet<Refuel>(0);
+	@OneToMany(mappedBy="refuelId",targetEntity=Refuel.class,orphanRemoval=true)
+	@JsonManagedReference
+	private Set<Refuel> refuel = new HashSet<Refuel>(0);
 
 	/**
 	 * Default
@@ -153,6 +162,17 @@ public class Vehicle implements Serializable {
 	public void setActivity(Activity activity) {
 		this.activity.add(activity);
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Vehicle [vehicleId=" + vehicleId + ", createdAT=" + createdAT + ", make=" + make + ", model=" + model
+				+ ", activity=" + activity + ", ride=" + refuel + "]";
+	}
+
+	
 	
 	
 

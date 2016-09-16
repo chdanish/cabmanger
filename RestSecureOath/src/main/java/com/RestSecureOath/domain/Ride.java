@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name="RIDE")
 public class Ride implements Serializable {
@@ -31,6 +33,7 @@ public class Ride implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="activityid", nullable = false)
+	@JsonBackReference
 	private Activity activity;
 	
 	private long fare;
@@ -38,6 +41,9 @@ public class Ride implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_at",updatable=false,nullable=false)
 	private Date createdAT;	
+	
+	public Ride() {
+	}
 
 	public Ride(Activity activity,long fare) {
 		this.activity=activity;

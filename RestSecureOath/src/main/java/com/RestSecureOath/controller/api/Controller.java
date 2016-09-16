@@ -1,4 +1,4 @@
-package com.RestSecureOath.controller;
+package com.RestSecureOath.controller.api;
 
 import java.util.HashMap;
 import java.util.Map;

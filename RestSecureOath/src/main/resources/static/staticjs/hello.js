@@ -1,4 +1,5 @@
-var app = angular.module('hello', [ 'ngRoute','ngCookies' ]).config(function($routeProvider, $httpProvider,$cookiesProvider) {
+var app = angular.module('hello', [ 'ngRoute','ngCookies' ]);
+app.config(function($routeProvider, $httpProvider,$cookiesProvider) {
 
 	/*$routeProvider.when('/', {
 		templateUrl : 'login',
@@ -11,24 +12,8 @@ var app = angular.module('hello', [ 'ngRoute','ngCookies' ]).config(function($ro
 });
 app.controller('navigation',
 
-function($rootScope, $scope, $http, $location, $route ,$window, $routeParams,$cookieStore) {
+function($rootScope, $scope, $http, $location, $route ,$window, $routeParams,$cookieStore,$cacheFactory,cacheService,$timeout) {
 
-/*	$scope.tab = function(route) {
-		return $route.current && route === $route.current.controller;
-	};
-
-	 $scope.logintab = false;
-	 $scope.signuptab= false;
-	 
-	    $scope.showlogin = function() {
-	        $scope.logintab = true;
-	        $scope.signuptab= false;
-	    }
-	    $scope.showsignup = function() {
-	    	$scope.signuptab= true;
-	        $scope.logintab = false;
-	        $scope.edit = true;
-	    }*/
 	    
 	    this.tab = 1;
 	    $scope.edit = true;
@@ -82,13 +67,13 @@ function($rootScope, $scope, $http, $location, $route ,$window, $routeParams,$co
 	    
 	    $scope.submit = function() {
 	    	
-	    	 var SignupDTO = { firstName: $scope.fName, lastName: $scope.lName, username: $scope.uName, password: $scope.pw2, email: $scope.email,role : $scope.role};
-	    	 $window.alert($scope.fName+" " + $scope.lName);
-	    	 $http.post('signup/register', SignupDTO).success(function() {
-	    		 this.tab = 1;
-	 		}).error(function(data) {
-	 			 this.tab = 2;
-	 		});
+	    	 var SignupDTO = { firstName: $scope.fName, lastName: $scope.lName, userName: $scope.uName, password: $scope.pw2, email: $scope.email};
+	    	 //$window.alert($scope.fName+" " + $scope.lName);
+	    	 cacheService.post('signup',SignupDTO).then(function(data) {
+	    		 if(data.status=='done'){
+	    			 $timeout(function() {angular.element('#login').triggerHandler('click');}, 0);
+	    		 }else $timeout(function() {angular.element('#signup').triggerHandler('click');}, 0);
+	    	 });
 	    }
 	    
 	   /* ---------------------------------------------------------------------------------------------------*/
@@ -190,3 +175,48 @@ app.run([
 	    }
 	  ]);
 
+
+app.service('cacheService',function($http, $cacheFactory, $q) {
+	  var cache = $cacheFactory('resourceCache', {capacity: 100}); // 1
+	  var getreq =  function(url) {
+	      if (cache.get(url)) {
+		        return cache.get(url); // 2
+		      }
+
+		      var promise = $http.get(url).then(
+		        function(response) {
+		          cache.put(url, $q.when(response.data)); // 4
+		          return response.data;
+		        }
+		      );
+		      cache.put(url, promise); // 3
+		      return promise;
+	  }
+	  var postreq =  function(url,data) {
+	           var promise = $http.post(url,data).then(
+		        function(response) {
+		          cache.put(url, $q.when(response.data)); // 4
+		          return response.data;
+		        }
+		      );
+		      cache.put(url, promise); // 3
+		      return promise;
+	  }
+	  var remove = function(url){
+		  cache.remove(url);
+		  console.log("Cache cleared for url: "+url);
+	  }
+	  
+	  var update = function(url){
+		  cache.remove(url);
+		  console.log("Cache cleared for url: "+url);
+		  return getreq(url);
+	  }
+	  
+	  return {
+	    get		:getreq,
+	    post	:postreq,
+	    remove	:remove,
+	    update	:update,
+	  };
+	});

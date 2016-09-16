@@ -16,6 +16,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="ACTIVITY")
 public class Activity implements Serializable {
@@ -32,12 +35,15 @@ public class Activity implements Serializable {
 	private long activityID;
 	
 	@ManyToOne
+	@JsonBackReference
 	private Driver driver;
 	
 	@ManyToOne
+	@JsonBackReference
 	private Vehicle vehicle;
 	
-	@OneToMany(mappedBy="activity",targetEntity=Ride.class)
+	@OneToMany(mappedBy="activity",targetEntity=Ride.class,orphanRemoval=true)
+	@JsonManagedReference
 	private Set<Ride> ride = new HashSet<Ride>(0);
 	
 	@Column(name="validity")

@@ -83,13 +83,7 @@ public class AuthServerOAuth2Config extends AuthorizationServerConfigurerAdapter
         endpoints
           .tokenStore(tokenStore())
           //.userDetailsService(userDetailsService())
-          .authenticationManager(new AuthenticationManager() {
-  			@Override
-  			public Authentication authenticate(Authentication authentication)
-  					throws AuthenticationException {
-  				return authenticationManager.getOrBuild().authenticate(authentication);
-  			}
-  		})
+          .authenticationManager((authentication)->authenticationManager.getOrBuild().authenticate(authentication))
           .accessTokenConverter(jwtAccessTokenConverter());
     }
  

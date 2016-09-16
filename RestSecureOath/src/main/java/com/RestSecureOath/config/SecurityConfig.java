@@ -22,9 +22,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -35,7 +32,6 @@ import org.springframework.security.web.csrf.LazyCsrfTokenRepository;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.util.WebUtils;
-import com.RestSecureOath.repo.UserRepositoryX;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 
 @Configuration
@@ -63,13 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) 
       throws Exception {
-        auth.parentAuthenticationManager(new AuthenticationManager() {
-  			@Override
-  			public Authentication authenticate(Authentication authentication)
-  					throws AuthenticationException {
-  				return authenticationManager.getOrBuild().authenticate(authentication);
-  			}
-  		});
+        auth.parentAuthenticationManager((authentication)->authenticationManager.getOrBuild().authenticate(authentication));
     }
  
     @Override
@@ -87,10 +77,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			//.successHandler(savedredir)
 			.failureUrl("http://localhost:8080/login")
 		.and()
-		.antMatcher("/**").authorizeRequests().antMatchers("/api/**","/login","/static","/static/**").permitAll()
+		.antMatcher("/**").authorizeRequests().antMatchers("/api/**","/login","/signup","/static","/static/**").permitAll()
 			.anyRequest().authenticated()
     	.and()
-			.csrf().csrfTokenRepository(csrfTokenRepository()).ignoringAntMatchers("/oauth/token","/oauth/token/")
+			.csrf().csrfTokenRepository(csrfTokenRepository())
 		.and()
 			.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
     	super.configure(http);

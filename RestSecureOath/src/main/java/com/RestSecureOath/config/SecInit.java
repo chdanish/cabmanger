@@ -16,10 +16,6 @@ import com.RestSecureOath.repo.UserRepositoryX;
 @Configuration
 class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
-	/*@Autowired
-    @Qualifier("authenticationManagerBean")
-    private AuthenticationManager authenticationManager;*/
-	
 	@Autowired
 	private UserRepositoryX userRepositoryx;
 	
@@ -36,9 +32,5 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 	public void init(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService());
 	}
-
-	/*public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService());
-	}*/
 
 }

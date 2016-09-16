@@ -13,6 +13,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="REFUEL",uniqueConstraints = @UniqueConstraint(
 		columnNames = { "vehicleid", "activityid","userid" }))
@@ -31,14 +34,17 @@ public class Refuel implements Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="vehicleid", nullable = false)
+	@JsonBackReference
 	private Vehicle vehicle;
 	
 	@OneToOne
 	@JoinColumn(name="activityid", nullable = false)
+	@JsonManagedReference
 	private Activity activity;
 	
 	@OneToOne
 	@JoinColumn(name="userid", nullable = false)
+	@JsonManagedReference
 	private Driver driver;
 
 	public Refuel() {
@@ -114,6 +120,14 @@ public class Refuel implements Serializable {
 	 */
 	public void setDriver(Driver driver) {
 		this.driver = driver;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Refuel [refuelId=" + refuelId + ", driver=" + driver + "]";
 	}
 	
 	

@@ -1,10 +1,15 @@
 package com.RestSecureOath.repo;
 
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.RestSecureOath.domain.User;
 import com.RestSecureOath.domain.Vehicle;
 
 @Repository
-public interface VehicleRepository extends CrudRepository<Vehicle, Long>{
+@Transactional
+public interface VehicleRepository extends CrudRepository<Vehicle, Long>,
+				QueryDslPredicateExecutor<User>{
 }
