@@ -94,7 +94,7 @@ public class A_drivers {
 	}
 	
 	@RequestMapping(value = "/a_drivers/snapupload/{id}", method = RequestMethod.POST)
-	 public String handleFileUpload(@RequestParam("file") MultipartFile file
+	public String handleFileUpload(@RequestParam("file") MultipartFile file
 			 ,@PathVariable long id) throws IOException {
 			byte[] bFile = new byte[(int) file.getSize()];
 			Driver driver = drepository.findOne(id);

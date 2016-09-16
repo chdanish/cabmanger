@@ -8,6 +8,15 @@ app.controller('a_admins', function($rootScope,$scope,cacheService,admin_factory
 			admin_factory.add(data.content[i]);
 		}
 	});
+	
+	$scope.file_changed = function(element,files) {
+		  var driverid = element.attributes['driverid'].value;
+		  console.log("Driver ID: "+driverid);
+		  console.log(files[0]);
+		  var file = files[0];
+		  var uploadUrl = "/a_admins/snapupload/"+driverid;
+		  cacheService.fileupload( uploadUrl,file);
+		 }
     
 });
 
@@ -22,6 +31,11 @@ app.factory('admin_factory', function($http) {
 
     factory.add = function(user) {
     	console.log(user.userId);
+    	if(user.snap==null){
+    		cacheService.get("static/images/avtar.txt").then(function(data){
+    			user.snap=data;
+    		});
+    	}
     	factory.list[user.userId]=user;
     	//console.log(factory.list);
         }

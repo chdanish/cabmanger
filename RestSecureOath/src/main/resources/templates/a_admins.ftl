@@ -46,7 +46,11 @@ min-width: 30% !important;
  -->	<div class="row band col-xs-12 col-md-12 col-lg-12" >
 	<button class="btn col-xs-3 col-md-3">Add Administrator</button>
 	<div class="row band" ng-repeat="x in admins track by $index" ng-if="x.firstName">
-			<div class="mycol col-sm-3">Snap </div>
+			<div class="mycol col-sm-3">
+			<img data-ng-src="data:image/png;base64,{{x.snap}}" />
+			<input ng-model="files" driverid="{{x.userId}}"  onchange="angular.element(this).scope().file_changed(this,files)"
+			 type="file" accept="image/*">
+			 </div>
 			<div class="mycol col-sm-3">
 				First Name: {{x.firstName}} Last Name: {{x.lastName}}<br>
 				Username: {{x.userName}}<br> Password: {{x.password}}<br>

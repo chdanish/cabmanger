@@ -6,8 +6,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-
 import javax.imageio.ImageIO;
 
 import org.springframework.stereotype.Service;

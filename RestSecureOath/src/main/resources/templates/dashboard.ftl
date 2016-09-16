@@ -14,7 +14,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.5/angular-route.js"></script>
   <link rel="stylesheet" href="static/css/style.css" />
   <script src="static/staticjs/app.js"></script>
-  <script src="static/staticjs/external/angular-base64.js"></script>
   <script src="static/staticjs/controllers/a_drivers.js"></script>
   <script src="static/staticjs/controllers/a_admins.js"></script>
   <script src="static/staticjs/controllers/a_vehicles.js"></script>
