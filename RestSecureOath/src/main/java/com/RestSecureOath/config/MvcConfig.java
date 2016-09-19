@@ -29,6 +29,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 		registry.addViewController("/admin_dash").setViewName("admin_dash");
 		registry.addViewController("/home").setViewName("home");
 		registry.addViewController("/a_setup").setViewName("a_setup");
+		registry.addViewController("/a_modalDialog").setViewName("a_modalDialog");
 		super.addViewControllers(registry);
 
 	}

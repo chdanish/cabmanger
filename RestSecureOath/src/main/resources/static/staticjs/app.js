@@ -42,6 +42,8 @@ app.controller('dashboard', function($scope) {
 app.controller('navo',function($rootScope, $scope, $http, $location ,$window,cacheService){
 	$scope.data={};
 	
+
+	
 	$scope.submit = function() {
     	
    	 var SignupDTO = { name: $scope.name, registration: $scope.registration, distanceunit: $scope.distanceunit, fuelunit: $scope.fuelunit};
@@ -52,7 +54,7 @@ app.controller('navo',function($rootScope, $scope, $http, $location ,$window,cac
    		$window.location.href="/dashboard";
    	 });
    }
-})
+});
 
 app.directive('sidebarDirective', function() {
     return {

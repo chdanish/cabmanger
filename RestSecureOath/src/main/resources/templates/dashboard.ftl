@@ -17,7 +17,10 @@
   <script src="static/staticjs/controllers/a_drivers.js"></script>
   <script src="static/staticjs/controllers/a_admins.js"></script>
   <script src="static/staticjs/controllers/a_vehicles.js"></script>
-  <script src="static/staticjs/directive/fileModel.js"></script>
+  <script src="static/staticjs/directive/datevalidation.js"></script>
+  <script src="static/staticjs/directive/password.js"></script>
+  <script src="static/staticjs/directive/modalDialog.js"></script>
+  <script src="static/staticjs/directive/editmodalDialog.js"></script>
   <script src="static/staticjs/service/cacheService.js"></script>
 </head>
 <body ng-app="app">
