@@ -25,23 +25,23 @@
 			<form role="form"  data-ajax="false" >
 			  <div class="form-group">
 			    <label for="name">Company Name:</label>
-			    <input type="text" class="form-control" ng-model="name" id="name" name="name"/>
+			    <input type="text" class="form-control" ng-model="SignupDTO.name" id="name" name="name"/>
 			  </div>
 			  <div class="form-group">
 			    <label for="registration ">Company Registration :</label>
-			    <input type="text" class="form-control" ng-model="registration" id="registration " name="registration "/>
+			    <input type="text" class="form-control" ng-model="SignupDTO.registration" id="registration " name="registration "/>
 			  </div>
 			  <div class="form-group">
-			    <label for="distanceunit">Distance Unit:</label>
-			    <input list="dunit" class="form-control" ng-model="distanceunit" id="distanceunit" name="distanceunit" placeholder="Select unit from menu"/>
+			    <label for="distanceunit">Distance Unit(Km\Mi):</label>
+			    <input list="dunit" class="form-control" ng-model="SignupDTO.distanceunit" id="distanceunit" name="distanceunit" placeholder="Select unit from menu"/>
 				  <datalist id="dunit">
 				    <option value="KILOMETER">
 				    <option value="MILE">
 				  </datalist> 
 			  </div>
 			  <div class="form-group">
-			    <label for="fuelunit ">Fuel Unit:</label>
-			    <input list="funit" class="form-control" ng-model="fuelunit" id="fuelunit" name="fuelunit" placeholder="Select unit from menu"/>
+			    <label for="fuelunit ">Fuel Unit(liter\Galon):</label>
+			    <input list="funit" class="form-control" ng-model="SignupDTO.fuelunit" id="fuelunit" name="fuelunit" placeholder="Select unit from menu"/>
 				  <datalist id="funit">
 				    <option value="LITRE">
 				    <option value="GALON">

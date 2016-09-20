@@ -34,6 +34,14 @@ public class Setup {
 		return "setup";		
 	}*/
 	
+	@RequestMapping(value = "/setup/info", method = RequestMethod.GET)
+	public Map<String,Object> info(Principal principal){
+		Map<String,Object> map = new HashMap<>();
+		Company comp = urepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
+		map.put("status", comp);
+		return map;
+	}
+	
 	@RequestMapping(value = "/setup", method = RequestMethod.POST)
 	public Map<String,String> save(@RequestBody CompRegDto2 company,Principal principal){
 		String username= SecurityUtils.getLoggedInUserName(principal);

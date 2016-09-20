@@ -42,13 +42,18 @@ app.controller('dashboard', function($scope) {
 app.controller('navo',function($rootScope, $scope, $http, $location ,$window,cacheService){
 	$scope.data={};
 	
-
+	cacheService.get('/setup/info').then(function(data) {
+		console.log(data.status);
+		$scope.SignupDTO = { 
+	   			 name			: data.status.name,
+	   			 registration	: data.status.regisration,
+	   			 distanceunit	: data.status.distanceunit,
+	   			 fuelunit		: data.status.fuelunit,
+	   			 };
+	});
 	
 	$scope.submit = function() {
-    	
-   	 var SignupDTO = { name: $scope.name, registration: $scope.registration, distanceunit: $scope.distanceunit, fuelunit: $scope.fuelunit};
-   	 //$window.alert($scope.fName+" " + $scope.lName);
-   	cacheService.post('setup',SignupDTO).then(function(data) {
+   	cacheService.post('setup',$scope.SignupDTO).then(function(data) {
    		 console.log(data);
    		//$location.path("/dashboard");
    		$window.location.href="/dashboard";
