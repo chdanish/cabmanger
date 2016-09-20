@@ -38,13 +38,25 @@ public class Vehicle implements Serializable {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonSerialize(using=CustomDateSerializer.class)
-	Date createdAT;
+	private Date createdAT;
 	
 	@Column(name="make")
 	private String make;
 	
-	@Column(name="model")
-	private long model;
+	@Column(name="modelname")
+	private String modelname;
+	
+	@Column(name="submodel")
+	private String submodel;
+	
+	@Column(name="regnumber")
+	private String regnumber;
+	
+	@Column(name="modelyear")
+	private int modelyear;
+	
+	@Column(name="user_snap",length=8000)
+	private String snap;
 	
 	@ManyToOne
 	@JoinColumn(name="companyid", nullable = false)
@@ -71,10 +83,10 @@ public class Vehicle implements Serializable {
 	 * @param model
 	 * @param company
 	 */
-	public Vehicle(String make, Long model, Company company) {
+	public Vehicle(String make, String modelname, Company company) {
 		super();
 		this.make = make;
-		this.model = model;
+		this.modelname = modelname;
 		this.company = company;
 		this.createdAT= new Date();
 	}
@@ -106,19 +118,18 @@ public class Vehicle implements Serializable {
 	public void setMake(String make) {
 		this.make = make;
 	}
-
 	/**
-	 * @return the model
+	 * @return the modelname
 	 */
-	public long getModel() {
-		return model;
+	public String getModelname() {
+		return modelname;
 	}
 
 	/**
-	 * @param model the model to set
+	 * @param modelname the modelname to set
 	 */
-	public void setModel(long model) {
-		this.model = model;
+	public void setModelname(String modelname) {
+		this.modelname = modelname;
 	}
 
 	/**
@@ -162,13 +173,73 @@ public class Vehicle implements Serializable {
 	public void setActivity(Activity activity) {
 		this.activity.add(activity);
 	}
+	
+	
+
+	/**
+	 * @return the snap
+	 */
+	public String getSnap() {
+		return snap;
+	}
+
+	/**
+	 * @param snap the snap to set
+	 */
+	public void setSnap(String snap) {
+		this.snap = snap;
+	}
+	
+	
+
+	/**
+	 * @return the submodel
+	 */
+	public String getSubmodel() {
+		return submodel;
+	}
+
+	/**
+	 * @param submodel the submodel to set
+	 */
+	public void setSubmodel(String submodel) {
+		this.submodel = submodel;
+	}
+
+	/**
+	 * @return the regnumber
+	 */
+	public String getRegnumber() {
+		return regnumber;
+	}
+
+	/**
+	 * @param regnumber the regnumber to set
+	 */
+	public void setRegnumber(String regnumber) {
+		this.regnumber = regnumber;
+	}
+
+	/**
+	 * @return the modelyear
+	 */
+	public int getModelyear() {
+		return modelyear;
+	}
+
+	/**
+	 * @param modelyear the modelyear to set
+	 */
+	public void setModelyear(int modelyear) {
+		this.modelyear = modelyear;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "Vehicle [vehicleId=" + vehicleId + ", createdAT=" + createdAT + ", make=" + make + ", model=" + model
+		return "Vehicle [vehicleId=" + vehicleId + ", createdAT=" + createdAT + ", make=" + make + ", model=" + modelname
 				+ ", activity=" + activity + ", ride=" + refuel + "]";
 	}
 

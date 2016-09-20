@@ -66,8 +66,8 @@ public class EntityTest {
 		Company comp = new Company();
 		Owner owner = new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,null);
 	    Driver driver1 =new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,owner.getCompany(),null, null, null, null, null, null, null);
-		Vehicle v1 =new Vehicle("Toyota", 2016l, comp);
-		Vehicle v2 =new Vehicle("Honda", 2016l, comp);
+		Vehicle v1 =new Vehicle("Toyota", "Altis", comp);
+		Vehicle v2 =new Vehicle("Honda", "Civic", comp);
 		
 		String result = new ObjectMapper().writeValueAsString(v1);
 		assertThat(result, containsString("Toyota"));

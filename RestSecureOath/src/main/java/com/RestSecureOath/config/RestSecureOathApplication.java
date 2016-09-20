@@ -141,8 +141,8 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 			adrepository.save(new Admin("adminUSER2", "password2", "email2", "firstName2", "lastName2", 1,compx,snap, null, null, null));
 			
 			//Add vehicle to the company
-			vrepository.save(new Vehicle("Toyota", 2016l, compx));
-			vrepository.save(new Vehicle("Honda" , 2015l, compx));
+			vrepository.save(new Vehicle("Toyota", "Altis", compx));
+			vrepository.save(new Vehicle("Honda" , "Civic", compx));
 			
 			//Start new activity
 			Driver driver= repository.findByUserName("driverusername1").get();

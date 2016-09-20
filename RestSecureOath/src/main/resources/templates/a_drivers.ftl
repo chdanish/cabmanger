@@ -7,12 +7,7 @@
 <link rel="stylesheet" href="static/css/modal.css"/>
 
 <style type="text/css">
-.band {
-  width: 100% !important;
-  background-color: #D7EAD8;
-  color: #323F3F;
-  clear: both;
-}
+
 hr.style3 {
 	border-top: 1px dashed #8c8b8b;
 }
@@ -31,13 +26,7 @@ hr.style3 {
 	margin: 0px !important;
 	background-color: inherit;
 }
-.container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-	width:  100%;
-    height: 100%;
-}
+
 .col-sm-3{
 min-width: 30% !important;
 }
@@ -45,15 +34,22 @@ min-width: 30% !important;
 </head>
 <!-- <body>
 <div class="container col-xs-12 col-md-12 col-lg-12" style="border:solid #ff0000 1px; ">
- -->	<div class="row band col-xs-12 col-md-12 col-lg-12" >
+ -->	<div class="row band  col-xs-12 col-md-12 col-lg-12" >
+ 	<div class="row center fullwidth" >
 	<button ng-click="toggleModal()" class="btn col-xs-3 col-md-3">Add Driver</button>
-	<div class="row band" ng-repeat="x in drivers track by $index" ng-if="x.firstName">
+	</div>
+	<div class="row band fullwidth" ng-repeat="x in drivers track by $index" ng-if="x.firstName">
 			<div class="mycol col-sm-3">
-			<img data-ng-src="data:image/png;base64,{{x.snap}}" />
-			<input ng-model="files" driverid="{{x.userId}}"  onchange="angular.element(this).scope().file_changed(this,files)"
-			 type="file" accept="image/*">
-			 <button ng-click="toggleModal(x.userId)" class="btn btn-xs">Edit Driver</button>
-			 <button ng-click="" class="btn btn-xs">Delete Driver</button>
+			<img data-ng-src="data:image/png;base64,{{x.snap}}" class="profileimg" />
+				<div class="center">
+					<input ng-model="files"  driverid="{{x.userId}}"  onchange="angular.element(this).scope().file_changed(this,files)"
+					 type="file" accept="image/*">
+				</div>
+				<div class="center">
+					 <button ng-click="toggleModal(x.userId)" class="btn btn-xs">Edit Driver</button>
+					 <span style="width: 10px"></span>
+					 <button ng-click="deletedriver(x.userId)" class="btn btn-xs">Delete Driver</button>
+				</div>
 			 </div>			 
 			<div class="mycol col-sm-3">
 				First Name: {{x.firstName}} Last Name: {{x.lastName}}<br/>

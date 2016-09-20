@@ -24,7 +24,7 @@
   <script src="static/staticjs/service/cacheService.js"></script>
 </head>
 <body ng-app="app">
-
+<div ng-view class="container fullwidth"></div>
 <div > 
                     <!--  ^--- Added class --> 
   <div class="">
@@ -47,7 +47,7 @@
     </div>
   </div>
 </div>
-<div ng-view class="container"></div> 
+ 
 <!-- http://plnkr.co/edit/xzcjStdvmkI2rpfMzLjI?p=preview -->
 </body>
 </html>

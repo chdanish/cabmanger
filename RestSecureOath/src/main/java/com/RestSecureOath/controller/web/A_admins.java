@@ -2,6 +2,12 @@ package com.RestSecureOath.controller.web;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,13 +32,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.RestSecureOath.domain.Admin;
+import com.RestSecureOath.domain.Company;
 import com.RestSecureOath.domain.Driver;
 import com.RestSecureOath.domain.QAdmin;
 import com.RestSecureOath.domain.User;
 import com.RestSecureOath.repo.AdminRepository;
 import com.RestSecureOath.repo.DriverRepository;
+import com.RestSecureOath.repo.UserRepositoryX;
+import com.RestSecureOath.requestdto.DriverDto;
 import com.RestSecureOath.service.StorageService;
 import com.RestSecureOath.service.ThumbnailService;
+import com.RestSecureOath.util.SecurityUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.sql.JPASQLQuery;
@@ -50,6 +61,8 @@ public class A_admins {
 	
 	private final StorageService storageService;
 	
+	private final UserRepositoryX userRepository;
+	
 	@PersistenceContext
 	private EntityManager em;
 	
@@ -61,12 +74,13 @@ public class A_admins {
 	 */
 	@Autowired
 	public A_admins(AdminRepository adrepository, DriverRepository drepository, ThumbnailService thumbnailService,
-			StorageService storageService) {
+			StorageService storageService,UserRepositoryX userRepository) {
 		super();
 		this.adrepository = adrepository;
 		this.drepository = drepository;
 		this.thumbnailService = thumbnailService;
 		this.storageService = storageService;
+		this.userRepository= userRepository;
 	}
 	
 
@@ -82,16 +96,57 @@ public class A_admins {
 	
 
 	@RequestMapping(value = "/a_admins/snapupload/{id}", method = RequestMethod.POST)
-	public String handleFileUpload(@RequestParam("file") MultipartFile file
+	public Map<String, Object> handleFileUpload(@RequestParam("file") MultipartFile file
 			 ,@PathVariable long id) throws IOException {
-			byte[] bFile = new byte[(int) file.getSize()];
+		Map<String,Object> map = new HashMap<>();	
+		byte[] bFile = new byte[(int) file.getSize()];
 			Admin driver = adrepository.findOne(id);
-			driver.setSnap(Base64Utils.encodeToString(thumbnailService.resize(file)));
+			String snap = Base64Utils.encodeToString(thumbnailService.resize(file));
+			driver.setSnap(snap);
 			adrepository.save(driver);
 	        storageService.store(file);
-	        return "redirect:/";
+	        map.put("status",snap);
+	        return map;
+	    }
+	
+	@RequestMapping(value = "/a_admins/add", method = RequestMethod.POST)
+	public Map<String,Object> add(@RequestBody DriverDto dto,Principal principal) throws IOException {
+		Map<String,Object> map = new HashMap<>();
+		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
+		Admin admin =adrepository.save(new Admin(dto.getUserName(), dto.getPassword(), dto.getEmail(),
+				dto.getFirstName(), dto.getLastName(), 1,comp,null, null, null, null));
+		map.put("status", admin);
+		return map;
 	    }
 
+	@RequestMapping(value = "/a_admins/update", method = RequestMethod.POST)
+	public Map<String,Object> update(@RequestBody DriverDto dto,Principal principal) throws IOException, ParseException {
+		Map<String,Object> map = new HashMap<>();
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+		Admin admin = adrepository.findOne(dto.getUserId());
+		admin.setUserName(dto.getUserName());
+		admin.setPassword(dto.getConfirmPassword());
+		admin.setFirstName(dto.getFirstName());
+		admin.setLastName(dto.getLastName());
+		admin.setEmail(dto.getEmail());
+		admin.setNationalID(dto.getNationalID());
+		admin.setNationalID_expiry((Date)formatter.parse(dto.getNationalID_expiry()));
+		admin =adrepository.save(admin);
+		map.put("status", admin);
+		return map;
+	    }
+	
+	@RequestMapping(value = "/a_admins/delete/{id}", method = RequestMethod.DELETE)
+	public Map<String, Object> delete(@PathVariable long id) throws IOException {
+		Map<String,Object> map = new HashMap<>();
+		if(drepository.exists(id)){
+			drepository.delete(id);
+			map.put("status","done");
+	        return map;
+		};		
+        map.put("status","fail");
+        return map;
+	    }
 	
 	@Controller
 	class A_driversView{

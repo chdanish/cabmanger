@@ -36,7 +36,7 @@ public class ThumbnailServiceIMPL implements ThumbnailService{
               // vertical image
               scale = Math.min(maxLongSide, imgIn.getHeight()) / (double) imgIn.getHeight();
             }
-
+            
             BufferedImage thumbnailOut = new BufferedImage((int) (scale * imgIn.getWidth()),
                                                            (int) (scale * imgIn.getHeight()),
                                                            imgIn.getType());

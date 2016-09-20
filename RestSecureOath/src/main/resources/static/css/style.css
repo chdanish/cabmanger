@@ -74,4 +74,29 @@ body, html{
     padding: 15px;
     background-color: #f1f1f1;
 }
+.band {
+ display: table;
+ background: lightblue;
+ padding: inherit;
+ border-radius: 5px;
+}
 
+img.profileimg {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	width:  100%;
+    height: 100%;  
+}
+.fullwidth{
+	width:  100% !important;
+}
+
+.fullheight{
+	height:  100% !important;
+}

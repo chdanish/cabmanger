@@ -11,11 +11,11 @@ app.controller('a_drivers', function($rootScope,$scope,cacheService,driver_facto
 	
 	$scope.file_changed = function(element,files) {
 		  var driverid = element.attributes['driverid'].value;
-		  console.log("Driver ID: "+driverid);
-		  console.log(files[0]);
 		  var file = files[0];
 		  var uploadUrl = "/a_drivers/snapupload/"+driverid;
-		  cacheService.fileupload( uploadUrl,file);
+		  cacheService.fileupload( uploadUrl,file).then(function(data){
+			  driver_factory.updatesnap(driverid,data.status);
+		  });
 		 }
 	$scope.adddriver = false;
 	$scope.toggleModal = function(id) {
@@ -84,6 +84,11 @@ app.controller('a_drivers', function($rootScope,$scope,cacheService,driver_facto
 		
 	}//http://ilevin350.com/jekyll/update/2016/03/17/creating-modal-dialogs-with-angular-js-and-custom-directives.html
 	
+	$scope.deletedriver= function(id){
+		console.log("Delete request for"+id);
+		driver_factory.delete(id);
+		$scope.drivers=driver_factory.getlist();
+	}
 });
 
 app.factory('driver_factory', function($http,cacheService) {
@@ -97,11 +102,11 @@ app.factory('driver_factory', function($http,cacheService) {
 
     factory.add = function(user) {
     	console.log(user.userId);
-    	if(user.snap==null){
-    		cacheService.get("static/images/avtar.txt").then(function(data){
-    			user.snap=data;
-    		});
-    	}
+	    	if(user.snap==null){
+	    		cacheService.get("static/images/avtar.txt").then(function(data){
+	    			user.snap=data;
+	    		});
+	    	}
     	factory.list[user.userId]=user;
     	//console.log(factory.list);
         }
@@ -109,8 +114,22 @@ app.factory('driver_factory', function($http,cacheService) {
     factory.getlist = function() {
             return factory.list;
         }
+    factory.updatesnap = function(id,snap) {
+    	factory.list[id].snap=snap;
+    	console.log(factory.list[id]);
+        return factory.list;
+    }
     factory.delete = function(id) {
-        return delete factory.list[id];
+    	var newlist=[];
+    	for(var i=0;i<factory.list.length;i++){
+    		if(factory.list[i] && factory.list[i].userId!=id){
+    			newlist[factory.list[i].userId]=factory.list[i];
+    		}
+    	}
+    	delete factory.list;
+    	factory.list=newlist;
+    	console.log(factory.list);
+        return factory.list;
     }
 
     factory.getuser =function(id) {

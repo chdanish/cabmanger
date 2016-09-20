@@ -113,7 +113,7 @@ public class A_drivers {
 		driver.setSnap(snap);
 		drepository.save(driver);
         storageService.store(file);
-        map.put("sattus",snap);
+        map.put("status",snap);
         return map;
 	    }
 	@RequestMapping(value = "/a_drivers/add", method = RequestMethod.POST)
