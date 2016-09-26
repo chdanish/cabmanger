@@ -10,6 +10,12 @@ app.controller('a_groups', function($rootScope,$scope,cacheService,groups_factor
 		console.log($scope.vehicles);
 	});
 	
+	$scope.filter={
+			type:"",
+			name:"",
+	}
+	
+	
 	
 	$scope.addgroup = false;
 	$scope.edit=true;
@@ -85,7 +91,7 @@ app.factory('groups_factory', function($http,cacheService) {
     factory.getgroup =function(id) {
         return factory.list[id];
     }
- 
-
+    
+    
     return factory;
 });

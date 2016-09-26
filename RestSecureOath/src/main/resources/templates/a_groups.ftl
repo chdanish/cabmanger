@@ -38,12 +38,24 @@ min-width: 30% !important;
 	<div class="row" >
 	<button ng-click="toggleModal()" class="btn col-xs-2">Add Group</button>
 	</div>
-	<div class="row" ng-repeat="x in groups track by $index" ng-if="x.groupId && x.name!='Owner'">
+	<div class="row" ><label>Filter By>>    </label>
+	<label for="filter_type">Type:</label>
+	<select name="filter_type" id="filter_type" ng-model="filter.type" >
+      <option value="">All</option>
+      <option value="USER">USER</option>
+      <option value="VEHICLE">VEHICLE</option>
+    </select>
+    <label for="filter_name">Name:</label>{{filter.name.name}}
+	<select name="filter_name" id="filter_name" ng-model="filter.name" 
+			ng-options="option.name for option in groups  | filter:{ name : '!Owner' } | filter:{ name : '' }" >
+    </select>  
+	</div>
+	<div class="row" ng-repeat="x in groups track by $index" ng-if="x.groupId && (x.name ==filter.name.name|| filter.name.name==null) && x.name!='Owner'">
 			 <div class="container row "><h2 >Group: {{x.name}}</h2></div>
 			 <div class="">
 				  
 				  <div class="table-responsive ">
-				  <table ng-if="x.user.length > 0" class="table">
+				  <table ng-if="x.user.length > 0 && (filter.type == 'USER'||filter.type == '')" class="table">
 				    <thead>
 				      <tr>
 				        <th><h2>Users</h2></th>
@@ -66,7 +78,7 @@ min-width: 30% !important;
 				      </tr>
 				    </tbody>
 				  </table>
-				  <table ng-if="x.vehicle.length > 0" class="table ">
+				  <table ng-if="x.vehicle.length > 0  && (filter.type == 'VEHICLE'||filter.type == '')" class="table ">
 				    <thead>
 				      <tr>
 				        <th><h2>Vehicles</h2></th>
