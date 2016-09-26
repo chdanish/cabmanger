@@ -8,12 +8,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import com.RestSecureOath.domain.Company;
 import com.RestSecureOath.domain.Driver;
+import com.RestSecureOath.domain.Groups;
 import com.RestSecureOath.domain.Owner;
-import com.RestSecureOath.domain.Roles;
 import com.RestSecureOath.domain.User;
 import com.RestSecureOath.domain.Vehicle;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,9 +24,10 @@ public class EntityTest {
 	  throws JsonProcessingException {
 		
 		Company comp = new Company();
-		Owner owner = new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,null);
-	    Driver driver1 =new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,owner.getCompany(),null, null, null, null, null, null, null);
-	    Driver driver2 =new Driver("driverusername2", "password2", "email2", "firstName", "lastName", 1,owner.getCompany(),null, null, null, null, null, null, null);
+		Groups dgroup = new Groups("Default", comp);
+		Owner owner = new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,dgroup);
+		Driver driver1 =new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,owner.getCompany(),dgroup);
+	    Driver driver2 =new Driver("driverusername2", "password2", "email2", "firstName", "lastName", 1,owner.getCompany(),dgroup);
 	    Set<User> user = new HashSet<>();
 	    user.add(owner);user.add(driver1);user.add(driver2);
 	    comp.setUser(user);
@@ -45,9 +44,10 @@ public class EntityTest {
 	  throws JsonProcessingException {
 		
 		Company comp = new Company();
-		Owner owner = new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,null);
-	    Driver driver1 =new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,owner.getCompany(),null, null, null, null, null, null, null);
-	    Driver driver2 =new Driver("driverusername2", "password2", "email2", "firstName", "lastName", 1,owner.getCompany(),null, null, null, null, null, null, null);
+		Groups dgroup = new Groups("Default", comp);
+		Owner owner = new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,dgroup);
+	    Driver driver1 =new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,owner.getCompany(),dgroup);
+	    Driver driver2 =new Driver("driverusername2", "password2", "email2", "firstName", "lastName", 1,owner.getCompany(),dgroup);
 	    Set<User> user = new HashSet<>();
 	    user.add(owner);user.add(driver1);user.add(driver2);
 	    comp.setUser(user);
@@ -64,10 +64,11 @@ public class EntityTest {
 	  throws JsonProcessingException {
 		
 		Company comp = new Company();
-		Owner owner = new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,null);
-	    Driver driver1 =new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,owner.getCompany(),null, null, null, null, null, null, null);
-		Vehicle v1 =new Vehicle("Toyota", "Altis", comp);
-		Vehicle v2 =new Vehicle("Honda", "Civic", comp);
+		Groups dgroup = new Groups("Default", comp);
+		Owner owner = new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,dgroup);
+	    Driver driver1 =new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,owner.getCompany(),dgroup);
+		Vehicle v1 =new Vehicle("Toyota", "Altis", comp,dgroup);
+		Vehicle v2 =new Vehicle("Honda", "Civic", comp,dgroup);
 		
 		String result = new ObjectMapper().writeValueAsString(v1);
 		assertThat(result, containsString("Toyota"));

@@ -32,14 +32,22 @@ import com.RestSecureOath.service.StorageService;
 import com.RestSecureOath.service.ThumbnailService;
 import com.RestSecureOath.util.SecurityUtils;
 import com.RestSecureOath.domain.Company;
+import com.RestSecureOath.domain.Driver;
 import com.RestSecureOath.domain.Groups;
+import com.RestSecureOath.domain.QGroups;
+import com.RestSecureOath.domain.QUser;
 import com.RestSecureOath.domain.QVehicle;
+import com.RestSecureOath.domain.Roles;
 import com.RestSecureOath.domain.User;
 import com.RestSecureOath.domain.Vehicle;
+import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.DslExpression;
+import com.querydsl.core.types.dsl.StringExpression;
 
 @RestController
-public class A_vehicles {
+public class A_groups {
 	
 	
 	private final VehicleRepository vrepository;
@@ -57,7 +65,7 @@ public class A_vehicles {
 	 * @param storageService
 	 */
 	@Autowired
-	public A_vehicles(VehicleRepository vrepository, ThumbnailService thumbnailService,
+	public A_groups(VehicleRepository vrepository, ThumbnailService thumbnailService,
 			StorageService storageService,UserRepositoryX userRepository,GroupsRepository grepository) {
 		super();
 		this.vrepository = vrepository;
@@ -67,62 +75,56 @@ public class A_vehicles {
 		this.grepository  = grepository;
 	}
 
-	@RequestMapping(value = "/a_vehicles/pageable/list", method = RequestMethod.GET)
-	HttpEntity<PagedResources<User>> persons(Pageable pageable,
+	@RequestMapping(value = "/a_groups/pageable/list", method = RequestMethod.GET)
+	HttpEntity<PagedResources<Groups>> persons(Pageable pageable,
 			PagedResourcesAssembler assembler,Principal principal) {
 		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
-		QVehicle vehicle = QVehicle.vehicle;
-		Predicate predicate = vehicle.company.companyId.eq(comp.getCompanyId()); //driver.company.CompanyId.eq(x);
-		Page<User> persons = vrepository.findAll(predicate,pageable);
-		return new ResponseEntity<>(assembler.toResource(persons), HttpStatus.OK);
+		QGroups group = QGroups.groups;
+		Predicate predicate = group.company.companyId.eq(comp.getCompanyId()); //driver.company.CompanyId.eq(x);
+		Page<Groups> groups = grepository.findAll(predicate,pageable);
+		return new ResponseEntity<>(assembler.toResource(groups), HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/a_vehicles/snapupload/{id}", method = RequestMethod.POST)
-	public Map<String, Object> handleFileUpload(@RequestParam("file") MultipartFile file
-		 ,@PathVariable long id) throws IOException {
-		Map<String,Object> map = new HashMap<>();
-		Vehicle vehicle = vrepository.findOne(id);
-		String snap = Base64Utils.encodeToString(thumbnailService.resize(file));
-		vehicle.setSnap(snap);
-		vrepository.save(vehicle);
-        storageService.store(file);
-        map.put("status",snap);
-        return map;
-	    }
-	
-	@RequestMapping(value = "/a_vehicles/add", method = RequestMethod.POST)
-	public Map<String,Object> add(@RequestBody VehicleDto dto,Principal principal) throws IOException {
+	@RequestMapping(value = "/a_groups/add/{name}", method = RequestMethod.POST)
+	public Map<String,Object> add(@PathVariable String name,Principal principal) throws IOException {
 		Map<String,Object> map = new HashMap<>();
 		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
-		Groups group = grepository.findByNameAndCompanyCompanyId("Default", comp.getCompanyId()).get();
-		Vehicle vehicle = new Vehicle(dto.getMake(),dto.getModelname(), comp,group);
-		vehicle.setSubmodel(dto.getSubmodel());
-		vehicle.setRegnumber(dto.getRegnumber());
-		vehicle.setModelyear(dto.getModelyear());
-		vehicle=vrepository.save(vehicle);
-		map.put("status", vehicle);
+		Groups group = grepository.save(new Groups(name,comp));
+		map.put("status", group);
 		return map;
 	    }
 	
-	@RequestMapping(value = "/a_vehicles/update", method = RequestMethod.POST)
-	public Map<String,Object> update(@RequestBody VehicleDto dto,Principal principal) throws IOException, ParseException {
+	@RequestMapping(value = "/a_groups/delete/{id}", method = RequestMethod.DELETE)
+	public Map<String, Object> delete(@PathVariable long id) throws IOException {
 		Map<String,Object> map = new HashMap<>();
-		Vehicle vehicle = vrepository.findOne(dto.getVehicleId());
-		vehicle.setMake(dto.getMake());
-		vehicle.setModelname(dto.getModelname());
-		vehicle.setSubmodel(dto.getSubmodel());
-		vehicle.setRegnumber(dto.getRegnumber());
-		vehicle.setModelyear(dto.getModelyear());
-		vehicle=vrepository.save(vehicle);
-		map.put("status", vehicle);
-		return map;
+		if(grepository.exists(id)){
+			grepository.delete(id);
+			map.put("status","done");
+	        return map;
+		};		
+        map.put("status","fail");
+        return map;
 	    }
+	@RequestMapping(value = "/a_groups/pageable/userlist", method = RequestMethod.GET)
+	HttpEntity<PagedResources<User>> users(Pageable pageable,
+			PagedResourcesAssembler assembler,Principal principal) {
+		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
+		QGroups group = QGroups.groups;
+		QUser user = QUser.user;
+
+		Predicate predriver = user.roles.contains(Roles.DRIVER).or(user.roles.contains(Roles.ADMIN));
+		Predicate predcomp = group.company.companyId.eq(comp.getCompanyId()); //driver.company.CompanyId.eq(x);
+		
+		Predicate pred =user.isNotNull().and(predcomp).and(predriver);
+		Page<User> users = userRepository.findAll(pred,pageable);
+		return new ResponseEntity<>(assembler.toResource(users), HttpStatus.OK);
+	}
 	
 	@Controller
-	class A_vehiclesView{
-		@RequestMapping(value = "/a_vehicles", method = RequestMethod.GET)
+	class A_groupsView{
+		@RequestMapping(value = "/a_groups", method = RequestMethod.GET)
 		public String getView(Principal principal){
-			return "a_vehicles";		
+			return "a_groups";		
 		}		
 	}
 }

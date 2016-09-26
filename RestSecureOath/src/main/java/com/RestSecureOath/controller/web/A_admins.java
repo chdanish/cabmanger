@@ -11,8 +11,6 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.RestSecureOath.domain.Admin;
 import com.RestSecureOath.domain.Company;
-import com.RestSecureOath.domain.Driver;
+import com.RestSecureOath.domain.Groups;
 import com.RestSecureOath.domain.QAdmin;
 import com.RestSecureOath.domain.User;
 import com.RestSecureOath.repo.AdminRepository;
@@ -44,10 +42,6 @@ import com.RestSecureOath.service.StorageService;
 import com.RestSecureOath.service.ThumbnailService;
 import com.RestSecureOath.util.SecurityUtils;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.sql.JPASQLQuery;
-import com.querydsl.sql.DerbyTemplates;
-import com.querydsl.sql.SQLTemplates;
 
 @RestController
 public class A_admins {
@@ -86,10 +80,10 @@ public class A_admins {
 
 	@RequestMapping(value = "/a_admins/pageable/list", method = RequestMethod.GET)
 	HttpEntity<PagedResources<User>> persons(Pageable pageable,
-			PagedResourcesAssembler assembler) {
+			PagedResourcesAssembler assembler,Principal principal) {
+		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
 		QAdmin admin = QAdmin.admin;
-		long x = 1;
-		Predicate predicate = admin.company.CompanyId.eq(x);
+		Predicate predicate = admin.company.companyId.eq(comp.getCompanyId());
 		Page<Admin> persons = adrepository.findAll(predicate,pageable);
 		return new ResponseEntity<>(assembler.toResource(persons), HttpStatus.OK);
 	}
@@ -99,7 +93,6 @@ public class A_admins {
 	public Map<String, Object> handleFileUpload(@RequestParam("file") MultipartFile file
 			 ,@PathVariable long id) throws IOException {
 		Map<String,Object> map = new HashMap<>();	
-		byte[] bFile = new byte[(int) file.getSize()];
 			Admin driver = adrepository.findOne(id);
 			String snap = Base64Utils.encodeToString(thumbnailService.resize(file));
 			driver.setSnap(snap);
@@ -112,9 +105,11 @@ public class A_admins {
 	@RequestMapping(value = "/a_admins/add", method = RequestMethod.POST)
 	public Map<String,Object> add(@RequestBody DriverDto dto,Principal principal) throws IOException {
 		Map<String,Object> map = new HashMap<>();
-		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
+		User user = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get();
+		Company comp =user.getCompany();
+		Groups groups= user.getGroups();
 		Admin admin =adrepository.save(new Admin(dto.getUserName(), dto.getPassword(), dto.getEmail(),
-				dto.getFirstName(), dto.getLastName(), 1,comp,null, null, null, null));
+				dto.getFirstName(), dto.getLastName(), 1,comp,groups));
 		map.put("status", admin);
 		return map;
 	    }
@@ -149,7 +144,7 @@ public class A_admins {
 	    }
 	
 	@Controller
-	class A_driversView{
+	class A_adminsView{
 		@RequestMapping(value = "/a_admins", method = RequestMethod.GET)
 		public String getView(Principal principal){
 			return "a_admins";		

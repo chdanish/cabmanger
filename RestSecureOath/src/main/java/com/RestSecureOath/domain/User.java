@@ -55,9 +55,15 @@ public class User implements Serializable {
 	private int enabled;
 	
 	@ManyToOne
+	@JoinColumn(name="groupid", nullable = false)
+	@JsonBackReference
+	private Groups groups;
+	
+	
+	@ManyToOne
 	@JoinColumn(name="companyid", nullable = false)
 	@JsonBackReference
-	Company company;
+	private Company company;
 
 	public User(){
 
@@ -92,7 +98,7 @@ public class User implements Serializable {
 	 * @param snap 
 	 */
 	public User( String userName, String password, String email, String firstName, String lastName,
-			Roles roles, int enabled,Company company, String snap) {
+			Roles roles, int enabled,Company company,Groups groups) {
 		super();
 		this.userName = userName;
 		this.password = password;
@@ -103,7 +109,7 @@ public class User implements Serializable {
 		this.enabled = enabled;
 		this.company=company;
 		this.createdAT=new Date();
-		this.snap=snap;
+		this.groups= groups;
 	}
 
 	public int getEnabled() {
@@ -212,6 +218,22 @@ public class User implements Serializable {
 	 */
 	public void setSnap(String snap) {
 		this.snap = snap;
+	}
+	
+	
+
+	/**
+	 * @return the groups
+	 */
+	public Groups getGroups() {
+		return groups;
+	}
+
+	/**
+	 * @param groups the groups to set
+	 */
+	public void setGroups(Groups groups) {
+		this.groups = groups;
 	}
 
 	/* (non-Javadoc)

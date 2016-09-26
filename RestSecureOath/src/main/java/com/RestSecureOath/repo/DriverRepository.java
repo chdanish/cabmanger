@@ -36,7 +36,7 @@ public interface DriverRepository extends CrudRepository<Driver, Long>
 			+ "PASSWORD ,LICENSEID ,LICENSEID_EXPIRY ,NATIONALID ,NATIONALID_EXPIRY ,"
 			+ "COMPANYID ,ENABLED ,LICENSEID_SNAP ,NATIONALID_SNAP ,REFUEL "
 			+ " FROM USER WHERE DTYPE ='Driver' AND COMPANYID =?1",	nativeQuery=true)*/
-	Optional<List<Driver>> findByCompID(long id);
+	Optional<List<Driver>> findByNationalID(Long id);
 	
 
 }

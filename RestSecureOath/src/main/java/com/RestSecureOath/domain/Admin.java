@@ -1,18 +1,9 @@
-/**
- * 
- */
 package com.RestSecureOath.domain;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -37,8 +28,6 @@ public class Admin extends User {
 	@Column(name="nationalid_snap")
 	private byte[] nationalID_snap;
 	
-	@Column(name="compid")
-	Long compID;
 	
 	/**
 	 * 
@@ -52,7 +41,6 @@ public class Admin extends User {
 	 */
 	public Admin(User user) {
 		super(user);
-		this.compID=user.company.getCompanyId();
 	}
 
 	/**
@@ -70,12 +58,9 @@ public class Admin extends User {
 	 * @param snap 
 	 */
 	public Admin( String userName, String password, String email, String firstName,
-			String lastName, int enabled, Company company, String snap,String nationalID, Date nationalID_expiry, byte[] nationalID_snap) {
-		super( userName, password, email, firstName, lastName, Roles.ADMIN, enabled, company,snap);
-		this.nationalID = nationalID;
-		this.nationalID_expiry = nationalID_expiry;
-		this.nationalID_snap = nationalID_snap;
-		this.compID=company.getCompanyId();
+			String lastName, int enabled, Company company,Groups groups) {
+		super( userName, password, email, firstName, lastName, Roles.ADMIN, enabled, company,groups);
+		
 	}
 	
 	
@@ -133,19 +118,7 @@ public class Admin extends User {
 		this.nationalID_snap = nationalID_snap;
 	}
 
-	/**
-	 * @return the compID
-	 */
-	public Long getCompID() {
-		return compID;
-	}
-
-	/**
-	 * @param compID the compID to set
-	 */
-	public void setCompID(Long compID) {
-		this.compID = compID;
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
@@ -153,7 +126,7 @@ public class Admin extends User {
 	@Override
 	public String toString() {
 		return "Admin [nationalID=" + nationalID + ", nationalID_expiry=" + nationalID_expiry + ", nationalID_snap="
-				+ Arrays.toString(nationalID_snap) + ", compID=" + compID + "]";
+				+ Arrays.toString(nationalID_snap)  + "]";
 	}
 	
 }

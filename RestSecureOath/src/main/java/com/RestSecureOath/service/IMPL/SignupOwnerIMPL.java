@@ -4,10 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import com.RestSecureOath.domain.Company;
+import com.RestSecureOath.domain.Groups;
 import com.RestSecureOath.domain.Owner;
 import com.RestSecureOath.repo.CompanyRepository;
+import com.RestSecureOath.repo.GroupsRepository;
 import com.RestSecureOath.repo.OwnerRepository;
-import com.RestSecureOath.repo.UserRepositoryX;
 import com.RestSecureOath.requestdto.UserRegDto;
 import com.RestSecureOath.service.SignupOwner;
 
@@ -15,19 +16,20 @@ import com.RestSecureOath.service.SignupOwner;
 @Scope("prototype")
 public class SignupOwnerIMPL implements SignupOwner{
 	
-	final OwnerRepository orepository;
-	final CompanyRepository crepository;
-	final UserRepositoryX userRepositoryX;
+	private final OwnerRepository orepository;
+	private final CompanyRepository crepository;
+	private final GroupsRepository grepository;
 	
 	@Autowired
-	public SignupOwnerIMPL(OwnerRepository ownerRepository,CompanyRepository companyRepository,UserRepositoryX userRepositoryX){
+	public SignupOwnerIMPL(OwnerRepository ownerRepository,CompanyRepository companyRepository
+			,GroupsRepository grepository){
 		this.orepository = ownerRepository;
 		this.crepository = companyRepository;
-		this.userRepositoryX= userRepositoryX;
+		this.grepository = grepository;
 	}
 
 	@Override
-	public String signup(UserRegDto owner){
+	public String save(UserRegDto owner){
 		
 		if(orepository.findByUserName(owner.getUserName())
 				.orElse(new Owner()).getUserId()!= null){
@@ -35,14 +37,22 @@ public class SignupOwnerIMPL implements SignupOwner{
 			return "fail";
 		}
 		Company comp = crepository.save(new Company());
-		orepository.save(
+		Groups dgroup = grepository.save(new Groups("Default", comp)); //Do not delete, Default group is for All newly added users/vehicles 
+		Groups ogroup = grepository.save(new Groups("Owner", comp));   //Do not delete, Owner group is only for Company owners
+		Owner newowner = orepository.save(
 				new Owner(owner.getUserName(),
 						owner.getPassword(),
 						owner.getEmail(),
 						owner.getFirstName(),
 						owner.getLastName(),
-						1, comp,null));
-		return "done";
+						1, comp,ogroup));
+		if (orepository.exists(newowner.getUserId())) {
+			return "done";
+		} else {
+			return "fail";
+		}
+		
+		
 	};
 	
 	

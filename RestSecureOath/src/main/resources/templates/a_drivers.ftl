@@ -34,11 +34,11 @@ min-width: 30% !important;
 </head>
 <!-- <body>
 <div class="container col-xs-12 col-md-12 col-lg-12" style="border:solid #ff0000 1px; ">
- -->	<div class="row band  col-xs-12 col-md-12 col-lg-12" >
- 	<div class="row center fullwidth" >
-	<button ng-click="toggleModal()" class="btn col-xs-3 col-md-3">Add Driver</button>
+ -->	<div class="row band col-xs-11 " >
+ 	<div class="row " >
+	<button ng-click="toggleModal()" class="btn col-xs-2">Add Driver</button>
 	</div>
-	<div class="row band fullwidth" ng-repeat="x in drivers track by $index" ng-if="x.firstName">
+	<div class="row " ng-repeat="x in drivers track by $index" ng-if="x.firstName">
 			<div class="mycol col-sm-3">
 			<img data-ng-src="data:image/png;base64,{{x.snap}}" class="profileimg" />
 				<div class="center">

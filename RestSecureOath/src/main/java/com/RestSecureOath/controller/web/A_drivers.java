@@ -1,18 +1,14 @@
 package com.RestSecureOath.controller.web;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -36,22 +32,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.RestSecureOath.domain.Company;
 import com.RestSecureOath.domain.Driver;
-import com.RestSecureOath.domain.QCompany;
+import com.RestSecureOath.domain.Groups;
 import com.RestSecureOath.domain.QDriver;
-import com.RestSecureOath.domain.QUser;
 import com.RestSecureOath.domain.User;
 import com.RestSecureOath.repo.DriverRepository;
+import com.RestSecureOath.repo.GroupsRepository;
 import com.RestSecureOath.repo.UserRepositoryX;
 import com.RestSecureOath.requestdto.DriverDto;
 import com.RestSecureOath.service.StorageService;
 import com.RestSecureOath.service.ThumbnailService;
 import com.RestSecureOath.util.SecurityUtils;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.QueryFactory;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @RestController
 public class A_drivers {
@@ -63,6 +54,8 @@ public class A_drivers {
 	private final DriverRepository drepository;
 	
 	private final ThumbnailService thumbnailService;
+	
+	private final GroupsRepository grepository;
 
 	/**
 	 * @param storageService
@@ -70,12 +63,14 @@ public class A_drivers {
 	 */
 	@Autowired
 	public A_drivers(StorageService storageService, DriverRepository drepository
-			,ThumbnailService thumbnailService,UserRepositoryX userRepository) {
+			,ThumbnailService thumbnailService,UserRepositoryX userRepository
+			,GroupsRepository grepository) {
 		super();
 		this.storageService = storageService;
 		this.drepository = drepository;
 		this.thumbnailService= thumbnailService;
 		this.userRepository = userRepository;
+		this.grepository = grepository;
 	}
 
 	@PersistenceContext
@@ -87,7 +82,7 @@ public class A_drivers {
 		long x = 1;
 		//User u = em.find(User.class, 2l);
 		//System.out.println(u);
-		Predicate predicate = driver.company.CompanyId.eq(x);
+		Predicate predicate = driver.company.companyId.eq(x);
 
 		return drepository.findAll(predicate);
 		//return null;
@@ -98,7 +93,7 @@ public class A_drivers {
 			PagedResourcesAssembler assembler,Principal principal) {
 		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
 		QDriver driver = QDriver.driver;
-		Predicate predicate = driver.company.CompanyId.eq(comp.getCompanyId());
+		Predicate predicate = driver.company.companyId.eq(comp.getCompanyId());
 		Page<Driver> persons = drepository.findAll(predicate,pageable);
 		return new ResponseEntity<>(assembler.toResource(persons), HttpStatus.OK);
 	}
@@ -107,7 +102,6 @@ public class A_drivers {
 	public Map<String, Object> handleFileUpload(@RequestParam("file") MultipartFile file
 		 ,@PathVariable long id) throws IOException {
 		Map<String,Object> map = new HashMap<>();
-		byte[] bFile = new byte[(int) file.getSize()];
 		Driver driver = drepository.findOne(id);
 		String snap = Base64Utils.encodeToString(thumbnailService.resize(file));
 		driver.setSnap(snap);
@@ -120,8 +114,9 @@ public class A_drivers {
 	public Map<String,Object> add(@RequestBody DriverDto dto,Principal principal) throws IOException {
 		Map<String,Object> map = new HashMap<>();
 		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
+		Groups group = grepository.findByNameAndCompanyCompanyId("Default", comp.getCompanyId()).get();
 		Driver driver =drepository.save(new Driver(dto.getUserName(), dto.getPassword(), dto.getEmail(),
-				dto.getFirstName(), dto.getLastName(), 1,comp,null, null, null, null, null, null, null));
+				dto.getFirstName(), dto.getLastName(), 1,comp,group));
 		map.put("status", driver);
 		return map;
 	    }

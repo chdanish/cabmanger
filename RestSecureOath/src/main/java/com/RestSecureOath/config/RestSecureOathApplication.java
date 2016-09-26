@@ -27,14 +27,13 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
-import org.springframework.util.Base64Utils;
-
 import com.RestSecureOath.domain.Activity;
 import com.RestSecureOath.domain.Admin;
 import com.RestSecureOath.domain.Company;
 import com.RestSecureOath.domain.Distance_Unit;
 import com.RestSecureOath.domain.Driver;
 import com.RestSecureOath.domain.Fuel_Unit;
+import com.RestSecureOath.domain.Groups;
 import com.RestSecureOath.domain.Owner;
 import com.RestSecureOath.domain.Refuel;
 import com.RestSecureOath.domain.Ride;
@@ -44,6 +43,7 @@ import com.RestSecureOath.repo.ActivityRepository;
 import com.RestSecureOath.repo.AdminRepository;
 import com.RestSecureOath.repo.CompanyRepository;
 import com.RestSecureOath.repo.DriverRepository;
+import com.RestSecureOath.repo.GroupsRepository;
 import com.RestSecureOath.repo.OwnerRepository;
 import com.RestSecureOath.repo.RefuelRepository;
 import com.RestSecureOath.repo.RideRepository;
@@ -104,7 +104,8 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 	@Order(-100)
 	public CommandLineRunner driverdemo(DriverRepository repository,CompanyRepository crepository,
 			OwnerRepository orepository,VehicleRepository vrepository,ActivityRepository arepository,
-			RideRepository rrepository,RefuelRepository rerepository,AdminRepository adrepository,ApplicationContext ctx) {
+			RideRepository rrepository,RefuelRepository rerepository,AdminRepository adrepository
+			,ApplicationContext ctx,GroupsRepository grepository) {
 		return (args) -> {
 			File file = new File("C:\\download.png");
 			byte[] bFile = new byte[(int) file.length()];
@@ -117,12 +118,16 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 	        } catch (Exception e) {
 		     e.printStackTrace();
 	        }
-			String snap = Base64Utils.encodeToString(bFile);
+//			String snap = Base64Utils.encodeToString(bFile);
 			//Create Owner with default company
 			Company comp = crepository.save(new Company());
-			orepository.save(new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,snap));
+			Groups dgroup = grepository.save(new Groups("Default", comp));
+			Groups ogroup = grepository.save(new Groups("Owner", comp));
+			
+			orepository.save(new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,ogroup));
 			Company comp2 = crepository.save(new Company());
-			orepository.save(new Owner("danish", "danish", "danish", "danish", "danish", 1, comp2,snap));
+			Groups dgroup2 = grepository.save(new Groups("Default", comp2));
+			orepository.save(new Owner("danish", "danish", "danish", "danish", "danish", 1, comp2,dgroup2));
 			//Retirive Company from saved owner and set param 
 			Owner owner = orepository.findByUserName("owner").get();
 			Company compx =crepository.save(owner.getCompany());
@@ -133,16 +138,20 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 			compx =crepository.save(compx);
 			
 			//Add driver to company
-			repository.save(new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,compx,null, null, null, null, null, null, null));
-			repository.save(new Driver("driverusername2", "password2", "email2", "firstName", "lastName", 1,compx,null, null, null, null, null, null, null));
+			repository.save(new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,compx,dgroup));
+			repository.save(new Driver("driverusername2", "password2", "email2", "firstName", "lastName", 1,compx,dgroup));
+			repository.save(new Driver("driver1username1", "password1", "email1", "firstName", "lastName", 1,comp2,dgroup2));
+			repository.save(new Driver("driver2username2", "password2", "email2", "firstName", "lastName", 1,comp2,dgroup2));
 			
 			//Add Admin officer to company
-			adrepository.save(new Admin("adminUSER", "password", "email", "firstName", "lastName", 1,compx,snap, null, null, null));
-			adrepository.save(new Admin("adminUSER2", "password2", "email2", "firstName2", "lastName2", 1,compx,snap, null, null, null));
+			adrepository.save(new Admin("adminUSER", "password", "email", "firstName", "lastName", 1,compx,dgroup));
+			adrepository.save(new Admin("adminUSER2", "password2", "email2", "firstName2", "lastName2", 1,compx,dgroup));
 			
 			//Add vehicle to the company
-			vrepository.save(new Vehicle("Toyota", "Altis", compx));
-			vrepository.save(new Vehicle("Honda" , "Civic", compx));
+			vrepository.save(new Vehicle("Toyota", "Altis", compx,dgroup));
+			vrepository.save(new Vehicle("Honda" , "Civic", compx,dgroup));
+			vrepository.save(new Vehicle("Toyota", "Altis", comp2,dgroup2));
+			vrepository.save(new Vehicle("Honda" , "Civic", comp2,dgroup2));
 			
 			//Start new activity
 			Driver driver= repository.findByUserName("driverusername1").get();

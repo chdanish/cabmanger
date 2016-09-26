@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.RestSecureOath.domain.Admin;
 import com.RestSecureOath.domain.Driver;
-import com.RestSecureOath.domain.User;
 
 @Repository
 @Transactional
@@ -38,7 +37,7 @@ public interface AdminRepository extends CrudRepository<Admin, Long>
 			+ "PASSWORD ,LICENSEID ,LICENSEID_EXPIRY ,NATIONALID ,NATIONALID_EXPIRY ,"
 			+ "COMPANYID ,ENABLED ,LICENSEID_SNAP ,NATIONALID_SNAP ,REFUEL "
 			+ " FROM USER WHERE DTYPE ='Driver' AND COMPANYID =?1",	nativeQuery=true)*/
-	Optional<List<Driver>> findByCompID(long id);
+	Optional<List<Driver>> findByNationalID(Long id);
 	
 
 }

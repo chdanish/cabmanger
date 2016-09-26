@@ -16,13 +16,13 @@
 </style>
 </head>
 <!-- <body>  -->
-<div class="container"> <!-- 
+<div class="row band col-xs-11 " > <!-- 
                       ^--- Added class  -->
   <div  ng-controller="navo">
 	<h4>Welcome to Uber Cab Manger</h4>
 	<p>** Please fill the below information to get started!!</p>
 		<div>
-			<form role="form"  data-ajax="false" >
+			<form role="form" class="col-xs-10"  data-ajax="false" >
 			  <div class="form-group">
 			    <label for="name">Company Name:</label>
 			    <input type="text" class="form-control" ng-model="SignupDTO.name" id="name" name="name"/>

@@ -2,7 +2,7 @@
      font-family : arial;
  } */
  .sidebar {
-     position : absolute;
+     position : fixed;
      top : 0;
      left : -160px;;
      transition : 100ms left;
@@ -10,10 +10,11 @@
  #navigation-toggle {
          position : absolute;
          left : 160px;
-         background : rgba(3,159,244,.95);
+         background : #82c4d9;
          color : white;
          text-decoration : none;
          padding : 20px;
+         
  }
  .show {
      left : 0;
@@ -25,34 +26,26 @@
  }
  .navigation-items a {
      display : block;
-     background-color : #444;
+    /*  background-color : #444; */
      color : white;
      line-height : 2em;
      text-decoration : none;
-     padding : 10px 30px;
-     width : 100px;
+     /* padding : 10px 30px; */
+     width : 100%;
 
  }
 /*  Active link style */
   .navigation-items a:link{
      color : white;
  }
-/*   .navigation-items a:visited{
-     background-color : #ff8000;
-     color : white;
- }
-  .navigation-items a:active{
-     background-color : #222;
-     color : white;
- } */
+
  .navigation-items a:hover{
      background-color : #222;
      color : white;
  }
  *{
     margin: 0;
-    padding: 0;
-    #box-sizing: content-box;
+    padding: 0;;
 }
 
 body, html{
@@ -61,19 +54,13 @@ body, html{
     font-size: 14px;
 }
 
-.container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-	width:  100%;
-    height: 100%;
-}
+ .bigcontainer{
+    position: relative;
+    width: 100%;
+    height: inherit;
+} 
 
-.container p{
-    max-width: 50%;
-    padding: 15px;
-    background-color: #f1f1f1;
-}
+
 .band {
  display: table;
  background: lightblue;
@@ -86,17 +73,29 @@ img.profileimg {
     margin-left: auto;
     margin-right: auto;
 }
-.center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-	width:  100%;
-    height: 100%;  
+img.miniprofileimg {
+    width:50px;
+    height:50px;
+    margin-left: 0px;
+    margin-right: 0p;
 }
+
 .fullwidth{
-	width:  100% !important;
+	/* width:  100% !important; */
 }
 
 .fullheight{
 	height:  100% !important;
 }
+.customscroll{
+	overflow: scroll;
+}
+.right {
+    position: absolute;
+    width: 95%;
+   /*  background-color: #b0e0e6; */
+    height:  100% !important;
+    margin-top: 50px;
+    right: 0px;
+}
+

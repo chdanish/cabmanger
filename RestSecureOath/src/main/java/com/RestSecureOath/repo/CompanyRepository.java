@@ -11,5 +11,8 @@ import com.RestSecureOath.domain.Company;
 @Repository
 @Transactional
 public interface CompanyRepository extends CrudRepository<Company, Long>{
+	
 	Optional<Company> findByName(String name);
+	
+	Optional<Company> findByCompanyId(Long id);
 }

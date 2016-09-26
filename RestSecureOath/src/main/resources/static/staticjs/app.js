@@ -12,6 +12,9 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 	.when('/a_setup', {
 		templateUrl : '/a_setup',
 		controller : 'navo'
+	}).when('/a_groups', {
+		templateUrl : '/a_groups',
+		controller : 'a_groups'
 	}).when('/a_admins', {
 		templateUrl : '/a_admins',
 		controller : 'a_admins'
@@ -30,14 +33,30 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 	    .hashPrefix('#');*/
 });
 
-app.controller('dashboard', function($scope) {
+app.controller('dashboard', function($rootScope,$scope,cacheService,$location,$window) {
     
     $scope.state = false;
     
     $scope.toggleState = function() {
         $scope.state = !$scope.state;
     };
+    cacheService.get('/setup/info').then(function(data) {
+    	if(data.status.name===null||data.status.distanceunit===null
+    			||data.status.fuelunit===null){
+    		$location.path("/a_setup");
+    	}
+    },function(error) {
+    	console.log("Controller: dashboard, Error: "+ error);
+    	$location.path("/");
+    });
     
+    $scope.logout = function() {
+    	cacheService.post('/logout').then(function(data){
+    		$window.location.href='/';},function(error) {
+        	console.log("Ctrl: dashboard,Req: /logout, Error: "+ error);
+        	$window.location.href='/';
+        });
+    }
 });
 app.controller('navo',function($rootScope, $scope, $http, $location ,$window,cacheService){
 	$scope.data={};
@@ -50,13 +69,16 @@ app.controller('navo',function($rootScope, $scope, $http, $location ,$window,cac
 	   			 distanceunit	: data.status.distanceunit,
 	   			 fuelunit		: data.status.fuelunit,
 	   			 };
-	});
+	},function(error) {
+		console.log("Controller: navo, Error: "+ error);
+		$location.path("/");
+    });
 	
 	$scope.submit = function() {
    	cacheService.post('setup',$scope.SignupDTO).then(function(data) {
    		 console.log(data);
    		//$location.path("/dashboard");
-   		$window.location.href="/dashboard";
+   		$window.location.href="/";
    	 });
    }
 });
@@ -74,7 +96,31 @@ app.directive('sidebarDirective', function() {
             });
         }
     };
-});  
+});
+app.directive('sidebarDirective', function() {
+    return {
+    		scope: {
+        state:'=',
+        },
+        link : function(scope, element, attr) {
+        element.on('click', function() {
+                if( scope.state === false)
+                  {
+                		document.getElementById("mySidenav").style.width = "250px";
+    								document.getElementById("main").style.marginLeft = "250px";
+    								document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+                    return;
+                  } else if(scope.state === true)
+                  {
+                		 document.getElementById("mySidenav").style.width = "0";
+   									 document.getElementById("main").style.marginLeft= "0";
+    								document.body.style.backgroundColor = "white";
+                    return;
+                  }
+            });
+        }
+    };
+});
   
   
 //}())

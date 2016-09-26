@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  * @author chdanish
  *
@@ -45,16 +47,13 @@ public class Driver extends User {
 	
 	@Column(name="licenseid_expiry")
 	private Date licenseID_expiry; 
-	
+		
 
 	@OneToMany(mappedBy="activityID",targetEntity=Activity.class,orphanRemoval=true)
 	private Set<Activity> activity= new HashSet<Activity>(0);
 	
 	@Column(name="refuel")
 	private Refuel refuel;
-	
-	@Column(name="compid")
-	Long compID;
 	
 	/**
 	 * 
@@ -88,16 +87,8 @@ public class Driver extends User {
 	 * Hard coded role
 	 */
 	public Driver( String userName, String password, String email, String firstName,
-			String lastName, int enabled, Company company,String snap,String nationalID, Date nationalID_expiry, byte[] nationalID_snap, String licenseID,
-			byte[] licenseID_snap, Date licenseID_expiry) {
-		super( userName, password, email, firstName, lastName, Roles.DRIVER, enabled, company,snap);
-		this.nationalID = nationalID;
-		this.nationalID_expiry = nationalID_expiry;
-		this.nationalID_snap = nationalID_snap;
-		this.licenseID = licenseID;
-		this.licenseID_snap = licenseID_snap;
-		this.licenseID_expiry = licenseID_expiry;
-		this.compID=company.getCompanyId();
+			String lastName, int enabled, Company company,Groups groups) {
+		super( userName, password, email, firstName, lastName, Roles.DRIVER, enabled, company,groups);
 	}
 	
 	
@@ -225,19 +216,7 @@ public class Driver extends User {
 		this.refuel = refuel;
 	}
 
-	/**
-	 * @return the compID
-	 */
-	public Long getCompID() {
-		return compID;
-	}
 
-	/**
-	 * @param compID the compID to set
-	 */
-	public void setCompID(Long compID) {
-		this.compID = compID;
-	}
 	
 
 

@@ -59,6 +59,11 @@ public class Vehicle implements Serializable {
 	private String snap;
 	
 	@ManyToOne
+	@JoinColumn(name="groupid", nullable = false)
+	@JsonBackReference
+	private Groups groups;
+	
+	@ManyToOne
 	@JoinColumn(name="companyid", nullable = false)
 	@JsonBackReference
 	private Company company;
@@ -83,12 +88,14 @@ public class Vehicle implements Serializable {
 	 * @param model
 	 * @param company
 	 */
-	public Vehicle(String make, String modelname, Company company) {
+	public Vehicle(String make, String modelname, Company company,
+			Groups groups) {
 		super();
 		this.make = make;
 		this.modelname = modelname;
 		this.company = company;
 		this.createdAT= new Date();
+		this.groups=groups;
 	}
 
 	/**

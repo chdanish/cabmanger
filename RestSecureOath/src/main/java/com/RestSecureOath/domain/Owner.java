@@ -49,8 +49,8 @@ public class Owner extends User {
 	 * @param company
 	 */
 	public Owner(String userName, String password, String email, String firstName, String lastName,
-			int enabled, Company company, String snap) {
-		super(userName, password, email, firstName, lastName, Roles.OWNER, enabled, company,snap);
+			int enabled, Company company,Groups groups) {
+		super(userName, password, email, firstName, lastName, Roles.OWNER, enabled, company,groups);
 		this.compID=company.getCompanyId();
 	}
 	

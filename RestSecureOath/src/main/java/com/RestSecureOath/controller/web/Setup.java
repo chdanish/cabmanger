@@ -16,7 +16,6 @@ import com.RestSecureOath.domain.Distance_Unit;
 import com.RestSecureOath.domain.Fuel_Unit;
 import com.RestSecureOath.domain.User;
 import com.RestSecureOath.repo.CompanyRepository;
-import com.RestSecureOath.repo.OwnerRepository;
 import com.RestSecureOath.repo.UserRepositoryX;
 import com.RestSecureOath.requestdto.CompRegDto2;
 import com.RestSecureOath.util.SecurityUtils;

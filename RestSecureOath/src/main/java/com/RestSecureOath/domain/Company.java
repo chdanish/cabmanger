@@ -12,7 +12,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,12 +21,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.RestSecureOath.util.CustomDateSerializer;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * @author chdanish
@@ -46,7 +41,7 @@ public class Company implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="companyid")
-	private Long CompanyId;
+	Long companyId;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_at",updatable=false,nullable=false)
@@ -75,7 +70,9 @@ public class Company implements Serializable {
 	@JsonManagedReference
 	private Set<Vehicle> vehicle = new HashSet<Vehicle>(0);
 
-	
+	@OneToMany(mappedBy="company",orphanRemoval=true)
+	@JsonManagedReference
+	private Set<Groups> groups = new HashSet<Groups>(0);
 
 	/**
 	 * @param createdAT
@@ -85,19 +82,21 @@ public class Company implements Serializable {
 		this.createdAT = new Date();
 	}
 
+
 	/**
 	 * @return the companyId
 	 */
 	public Long getCompanyId() {
-		return CompanyId;
+		return companyId;
 	}
 
 	/**
 	 * @param companyId the companyId to set
 	 */
 	public void setCompanyId(Long companyId) {
-		this.CompanyId = companyId;
+		this.companyId = companyId;
 	}
+
 
 	/**
 	 * @return the name
@@ -213,7 +212,7 @@ public class Company implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Company [" + (CompanyId != null ? "CompanyId=" + CompanyId + ", " : "")
+		return "Company [" + (companyId != null ? "CompanyId=" + companyId + ", " : "")
 				+ (createdAT != null ? "createdAT=" + createdAT + ", " : "")
 				+ (name != null ? "name=" + name + ", " : "")
 				+ (registration != null ? "Regisration=" + registration + ", " : "")

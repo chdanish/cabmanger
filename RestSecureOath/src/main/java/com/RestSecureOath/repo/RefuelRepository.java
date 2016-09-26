@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.RestSecureOath.domain.Refuel;
-import com.RestSecureOath.domain.Ride;
 
 @Repository
 @Transactional

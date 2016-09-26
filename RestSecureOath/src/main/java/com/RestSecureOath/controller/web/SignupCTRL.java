@@ -27,7 +27,7 @@ public class SignupCTRL {
 		.filter(e->e.getKey()!=""&&e.getValue()!="").forEach(System.out::println);*/
 
 		Map<String,String> model = new HashMap<String,String>();
-		model.put("status", SignupOwner.signup(owner));
+		model.put("status", SignupOwner.save(owner));
 		model.put("instruction", "**Please verify your email before signing in.");
 
 		return model;		
