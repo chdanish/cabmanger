@@ -10,7 +10,7 @@ app.controller('a_groups', function($rootScope,$scope,cacheService,groups_factor
 		console.log($scope.vehicles);
 	});
 	
-	$scope.filter={
+	$scope.gfilter={
 			type:"",
 			name:"",
 	}

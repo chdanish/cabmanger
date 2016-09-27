@@ -21,6 +21,7 @@
   <script src="static/staticjs/controllers/a_admins.js"></script>
   <script src="static/staticjs/controllers/a_vehicles.js"></script>
   <script src="static/staticjs/directive/datevalidation.js"></script>
+  <script src="static/staticjs/filter/groupselction.js"></script>
   <script src="static/staticjs/directive/navbar.js"></script>
   <script src="static/staticjs/directive/password.js"></script>
   <script src="static/staticjs/directive/modalDialog.js"></script>
@@ -33,52 +34,34 @@
 	<div ng-view class="right "></div>
 </div>
 
-<div  id="mySidenav" class="sidenav">
+<div  ng-controller="dashboard" id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" sidebar-directive state="true">&times;</a>
-  <ul class="navigation col-xs-12">
+  <ul class="navigation col-xs-12">  		
           <li class="navigation-items"> <a ng-href="#home">Home</a> 
           </li>
-          <li class="navigation-items"> <a href="#a_groups">Groups</a> 
+          <li class="navigation-items"> <a ng-href="#a_groups">Groups</a> 
           </li>
-          <li class="navigation-items"> <a href="#a_admins">Admin</a> 
+          <li class="navigation-items"> <a ng-href="#a_admins">Admin</a> 
           </li>
           <li class="navigation-items"> <a ng-href="#a_drivers">Drivers</a> 
           </li>
-          <li class="navigation-items"> <a href="#a_vehicles">Vehicles</a> 
+          <li class="navigation-items"> <a ng-href="#a_vehicles">Vehicles</a> 
           </li>
+          <li role="navigation-items" class="dropdown">
+		    <a ng-click="activitymenuswitch()" class="dropdown-toggle" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+		      Activity <span class="caret"></span>
+		    </a>
+		    <ul class="dropdown-menu" style="display: block" ng-if="activitymenu" >
+		      <li><a xng-href="$">Driver Activity</a></li>
+		      <li><a xng-href="$">Vehicle Activity</a></li>
+		    </ul>
+		  </li>
           <li class="navigation-items"> <a ng-href="#a_setup">Settings</a> 
           </li>
-          <li class="navigation-items"> <a ng-click="logout()">Logout</a> 
+          <li class="navigation-items"> <a  ng-click="logout()">Logout</a> 
           </li>
         </ul>
 </div>
-
-<!-- <div > 
-                     ^--- Added class 
-  <div class="">
-    <div ng-controller="dashboard">
-      <div class="sidebar" sidebar-directive="state">
-        <navx  id="navigation-toggle" ng-click="toggleState()">Navigation</navx>
-        <ul class="navigation">
-          <li class="navigation-items"> <a ng-href="#home">Home</a> 
-          </li>
-          <li class="navigation-items"> <a href="#a_groups">Groups</a> 
-          </li>
-          <li class="navigation-items"> <a href="#a_admins">Admin</a> 
-          </li>
-          <li class="navigation-items"> <a ng-href="#a_drivers">Drivers</a> 
-          </li>
-          <li class="navigation-items"> <a href="#a_vehicles">Vehicles</a> 
-          </li>
-          <li class="navigation-items"> <a ng-href="#a_setup">Settings</a> 
-          </li>
-          <li class="navigation-items"> <a ng-click="logout()">Logout</a> 
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div> -->
  
 <!-- http://plnkr.co/edit/xzcjStdvmkI2rpfMzLjI?p=preview -->
 </body>

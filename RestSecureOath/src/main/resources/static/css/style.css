@@ -8,13 +8,12 @@
      transition : 100ms left;
  }
  #navigation-toggle {
-         position : absolute;
-         left : 160px;
-         background : #82c4d9;
-         color : white;
-         text-decoration : none;
-         padding : 20px;
-         
+     position : absolute;
+     left : 160px;
+     background : #82c4d9;
+     color : white;
+     text-decoration : none;
+     padding : 20px;         
  }
  .show {
      left : 0;
@@ -31,7 +30,7 @@
      line-height : 2em;
      text-decoration : none;
      /* padding : 10px 30px; */
-     width : 100%;
+     /* width : 100%; */
 
  }
 /*  Active link style */

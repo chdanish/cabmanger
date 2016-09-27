@@ -50,6 +50,11 @@ app.controller('dashboard', function($rootScope,$scope,cacheService,$location,$w
     	$location.path("/");
     });
     
+    $scope.activitymenu=false;
+    $scope.activitymenuswitch=function(){
+    	$scope.activitymenu=!$scope.activitymenu;
+    };
+    
     $scope.logout = function() {
     	cacheService.post('/logout').then(function(data){
     		$window.location.href='/';},function(error) {
