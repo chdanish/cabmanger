@@ -13,7 +13,7 @@ app.controller('a_groups', function($rootScope,$scope,cacheService,groups_factor
 	$scope.gfilter={
 			type:"",
 			name:"",
-	}
+		}
 	
 	
 	

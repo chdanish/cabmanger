@@ -16,8 +16,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.RestSecureOath.util.CustomVehicleSerializer;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 
 @Entity
 @Table(name="ACTIVITY")
@@ -34,12 +36,11 @@ public class Activity implements Serializable {
 	@Column(name="activityid")
 	private long activityID;
 	
-	@ManyToOne
-	@JsonBackReference
+	@ManyToOne(optional=false)
 	private Driver driver;
 	
-	@ManyToOne
-	@JsonBackReference
+	@ManyToOne(targetEntity=Vehicle.class,optional=false)
+	@JsonSerialize(using=CustomVehicleSerializer.class)
 	private Vehicle vehicle;
 	
 	@OneToMany(mappedBy="activity",targetEntity=Ride.class,orphanRemoval=true)
@@ -53,11 +54,11 @@ public class Activity implements Serializable {
 	@Column(name="created_at",updatable=false,nullable=false)
 	private Date createdAT;
 	
-	@Column(name="start_reading")
+	@Column(name="start_reading",nullable=false)
 	private long startReading;
 	
-	@Column(name="start_reading_snap")
-	private byte[] startReading_snap;
+	@Column(name="start_reading_snap",length=20000,nullable=false)
+	private String startReading_snap;
 	
 	@Column(name="ended_at")
 	private Date endedAT;
@@ -65,8 +66,8 @@ public class Activity implements Serializable {
 	@Column(name="end_reading")
 	private long endReading;
 	
-	@Column(name="endreading_snap")
-	private byte[] endReading_snap;
+	@Column(name="endreading_snap",length=20000)
+	private String endReading_snap;
 	
 	@Column(name="refuel_litre")
 	private long refuel_litre;
@@ -77,7 +78,7 @@ public class Activity implements Serializable {
 	public Activity() {
 	}
 
-	public Activity(Driver driver,Vehicle vehicle,long startReading,byte[] startReading_snap) {
+	public Activity(Driver driver,Vehicle vehicle,long startReading,String startReading_snap) {
 		this.createdAT= new Date();
 		this.driver=driver;
 		this.vehicle=vehicle;
@@ -184,20 +185,6 @@ public class Activity implements Serializable {
 	}
 
 	/**
-	 * @return the startReading_snap
-	 */
-	public byte[] getStartReading_snap() {
-		return startReading_snap;
-	}
-
-	/**
-	 * @param startReading_snap the startReading_snap to set
-	 */
-	public void setStartReading_snap(byte[] startReading_snap) {
-		this.startReading_snap = startReading_snap;
-	}
-
-	/**
 	 * @return the endedAT
 	 */
 	public Date getEndedAT() {
@@ -223,20 +210,6 @@ public class Activity implements Serializable {
 	 */
 	public void setEndReading(long endReading) {
 		this.endReading = endReading;
-	}
-
-	/**
-	 * @return the endReading_snap
-	 */
-	public byte[] getEndReading_snap() {
-		return endReading_snap;
-	}
-
-	/**
-	 * @param endReading_snap the endReading_snap to set
-	 */
-	public void setEndReading_snap(byte[] endReading_snap) {
-		this.endReading_snap = endReading_snap;
 	}
 
 	/**
@@ -272,6 +245,34 @@ public class Activity implements Serializable {
 	 */
 	public void setRide(Set<Ride> ride) {
 		this.ride = ride;
+	}
+
+	/**
+	 * @return the startReading_snap
+	 */
+	public String getStartReading_snap() {
+		return startReading_snap;
+	}
+
+	/**
+	 * @param startReading_snap the startReading_snap to set
+	 */
+	public void setStartReading_snap(String startReading_snap) {
+		this.startReading_snap = startReading_snap;
+	}
+
+	/**
+	 * @return the endReading_snap
+	 */
+	public String getEndReading_snap() {
+		return endReading_snap;
+	}
+
+	/**
+	 * @param endReading_snap the endReading_snap to set
+	 */
+	public void setEndReading_snap(String endReading_snap) {
+		this.endReading_snap = endReading_snap;
 	}
 	
 	

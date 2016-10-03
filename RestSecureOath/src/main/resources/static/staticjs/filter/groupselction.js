@@ -7,8 +7,7 @@ app.filter('groupselction', function() {
     		if(input[i]&&input[i].name&&input[i].name!='Owner'){
     			list.push(input[i]);	
     		}
-    	}    	
-    	console.log(list);
+    	}
         return list;
       };
     });

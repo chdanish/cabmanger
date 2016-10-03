@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -49,7 +51,7 @@ public class Vehicle implements Serializable {
 	@Column(name="submodel")
 	private String submodel;
 	
-	@Column(name="regnumber")
+	@Column(name="regnumber",nullable=false)
 	private String regnumber;
 	
 	@Column(name="modelyear")
@@ -69,7 +71,6 @@ public class Vehicle implements Serializable {
 	private Company company;
 	
 	@OneToMany(mappedBy="activityID",targetEntity=Activity.class,orphanRemoval=true)
-	@JsonManagedReference
 	private Set<Activity> activity= new HashSet<Activity>(0);
 	
 	@OneToMany(mappedBy="refuelId",targetEntity=Refuel.class,orphanRemoval=true)
@@ -89,13 +90,14 @@ public class Vehicle implements Serializable {
 	 * @param company
 	 */
 	public Vehicle(String make, String modelname, Company company,
-			Groups groups) {
+			Groups groups,String regnumber) {
 		super();
 		this.make = make;
 		this.modelname = modelname;
 		this.company = company;
 		this.createdAT= new Date();
 		this.groups=groups;
+		this.regnumber=regnumber;
 	}
 
 	/**

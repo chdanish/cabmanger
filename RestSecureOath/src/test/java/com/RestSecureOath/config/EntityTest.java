@@ -67,8 +67,8 @@ public class EntityTest {
 		Groups dgroup = new Groups("Default", comp);
 		Owner owner = new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,dgroup);
 	    Driver driver1 =new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,owner.getCompany(),dgroup);
-		Vehicle v1 =new Vehicle("Toyota", "Altis", comp,dgroup);
-		Vehicle v2 =new Vehicle("Honda", "Civic", comp,dgroup);
+		Vehicle v1 =new Vehicle("Toyota", "Altis", comp,dgroup,"rvu-2944");
+		Vehicle v2 =new Vehicle("Honda", "Civic", comp,dgroup,"trw-8893");
 		
 		String result = new ObjectMapper().writeValueAsString(v1);
 		assertThat(result, containsString("Toyota"));

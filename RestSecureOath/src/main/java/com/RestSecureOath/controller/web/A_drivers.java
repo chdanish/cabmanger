@@ -103,7 +103,7 @@ public class A_drivers {
 		 ,@PathVariable long id) throws IOException {
 		Map<String,Object> map = new HashMap<>();
 		Driver driver = drepository.findOne(id);
-		String snap = Base64Utils.encodeToString(thumbnailService.resize(file));
+		String snap = Base64Utils.encodeToString(thumbnailService.resize(file,140));
 		driver.setSnap(snap);
 		drepository.save(driver);
         storageService.store(file);

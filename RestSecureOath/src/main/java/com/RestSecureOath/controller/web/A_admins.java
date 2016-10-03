@@ -94,7 +94,7 @@ public class A_admins {
 			 ,@PathVariable long id) throws IOException {
 		Map<String,Object> map = new HashMap<>();	
 			Admin driver = adrepository.findOne(id);
-			String snap = Base64Utils.encodeToString(thumbnailService.resize(file));
+			String snap = Base64Utils.encodeToString(thumbnailService.resize(file,140));
 			driver.setSnap(snap);
 			adrepository.save(driver);
 	        storageService.store(file);

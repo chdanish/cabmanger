@@ -148,23 +148,25 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 			adrepository.save(new Admin("adminUSER2", "password2", "email2", "firstName2", "lastName2", 1,compx,dgroup));
 			
 			//Add vehicle to the company
-			vrepository.save(new Vehicle("Toyota", "Altis", compx,dgroup));
-			vrepository.save(new Vehicle("Honda" , "Civic", compx,dgroup));
-			vrepository.save(new Vehicle("Toyota", "Altis", comp2,dgroup2));
-			vrepository.save(new Vehicle("Honda" , "Civic", comp2,dgroup2));
+		
+			vrepository.save(new Vehicle("Toyota", "Altis", compx,dgroup,"max-1223"));
+			vrepository.save(new Vehicle("Honda" , "Civic", compx,dgroup,"lmx-1597"));
+			vrepository.save(new Vehicle("Toyota", "Altis", comp2,dgroup2,"rmx-193"));
+			vrepository.save(new Vehicle("Honda" , "Civic", comp2,dgroup2,"lov-1245"));
 			
 			//Start new activity
 			Driver driver= repository.findByUserName("driverusername1").get();
+			Driver driver2= repository.findByUserName("driverusername2").get();
 			driver.setRoles(Roles.ADMIN);
 			repository.save(driver);
 			Vehicle vehicle= vrepository.findOne(1l);
 			Vehicle vehicle2= vrepository.findOne(2l);
-			arepository.save(new Activity(driver, vehicle, 329848392l, bFile));
-			arepository.save(new Activity(driver, vehicle2, 56448392l, bFile));
+			arepository.save(new Activity(driver, vehicle, 329848392l, ""));
+			arepository.save(new Activity(driver2, vehicle2, 56448392l, ""));
 			Activity activity = arepository.findOne(1l);
 			Activity activity2 = arepository.findOne(2l);
 			activity.setEndReading(32432433l);
-			activity.setEndReading_snap(new byte[10]);
+			activity.setEndReading_snap("");
 			rrepository.save(new Ride(activity, 230l));
 			rrepository.save(new Ride(activity, 530l));
 			rrepository.save(new Ride(activity2, 340l));

@@ -3,7 +3,9 @@ package com.RestSecureOath.controller.web;
 import java.io.IOException;
 import java.security.Principal;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,19 +29,25 @@ import org.springframework.web.multipart.MultipartFile;
 import com.RestSecureOath.repo.GroupsRepository;
 import com.RestSecureOath.repo.UserRepositoryX;
 import com.RestSecureOath.repo.VehicleRepository;
+import com.RestSecureOath.repo.ActivityRepository;
+import com.RestSecureOath.repo.DriverRepository;
+import com.RestSecureOath.requestdto.StartactivityDto;
 import com.RestSecureOath.requestdto.VehicleDto;
 import com.RestSecureOath.service.StorageService;
 import com.RestSecureOath.service.ThumbnailService;
 import com.RestSecureOath.util.SecurityUtils;
+import com.RestSecureOath.domain.Activity;
 import com.RestSecureOath.domain.Company;
+import com.RestSecureOath.domain.Driver;
 import com.RestSecureOath.domain.Groups;
+import com.RestSecureOath.domain.QActivity;
 import com.RestSecureOath.domain.QVehicle;
 import com.RestSecureOath.domain.User;
 import com.RestSecureOath.domain.Vehicle;
 import com.querydsl.core.types.Predicate;
 
 @RestController
-public class A_vehicles {
+public class A_startactivity {
 	
 	
 	private final VehicleRepository vrepository;
@@ -51,78 +59,56 @@ public class A_vehicles {
 	private final UserRepositoryX userRepository;
 	
 	private final GroupsRepository grepository;
+	
+	private final ActivityRepository arepository;
+	
+	private final DriverRepository drepository;
 	/**
 	 * @param vrepository
 	 * @param thumbnailService
 	 * @param storageService
 	 */
 	@Autowired
-	public A_vehicles(VehicleRepository vrepository, ThumbnailService thumbnailService,
-			StorageService storageService,UserRepositoryX userRepository,GroupsRepository grepository) {
+	public A_startactivity(VehicleRepository vrepository, ThumbnailService thumbnailService,
+			StorageService storageService,UserRepositoryX userRepository,GroupsRepository grepository,
+			ActivityRepository arepository,DriverRepository drepository) {
 		super();
 		this.vrepository = vrepository;
 		this.thumbnailService = thumbnailService;
 		this.storageService = storageService;
 		this.userRepository = userRepository;
 		this.grepository  = grepository;
+		this.arepository = arepository ;
+		this.drepository = drepository;
 	}
-
-	@RequestMapping(value = "/a_vehicles/pageable/list", method = RequestMethod.GET)
-	HttpEntity<PagedResources<User>> persons(Pageable pageable,
-			PagedResourcesAssembler assembler,Principal principal) {
+	
+	@RequestMapping(value = "/a_startactivity/vehicle/list", method = RequestMethod.GET)
+	public Iterable<User> vehiclelist(Principal principal) {
 		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
 		QVehicle vehicle = QVehicle.vehicle;
 		Predicate predicate = vehicle.company.companyId.eq(comp.getCompanyId()); //driver.company.CompanyId.eq(x);
-		Page<User> persons = vrepository.findAll(predicate,pageable);
-		return new ResponseEntity<>(assembler.toResource(persons), HttpStatus.OK);
+		return vrepository.findAll(predicate);
 	}
 	
-	@RequestMapping(value = "/a_vehicles/snapupload/{id}", method = RequestMethod.POST)
-	public Map<String, Object> handleFileUpload(@RequestParam("file") MultipartFile file
-		 ,@PathVariable long id) throws IOException {
-		Map<String,Object> map = new HashMap<>();
-		Vehicle vehicle = vrepository.findOne(id);
-		String snap = Base64Utils.encodeToString(thumbnailService.resize(file,140));
-		vehicle.setSnap(snap);
-		vrepository.save(vehicle);
-        storageService.store(file);
-        map.put("status",snap);
-        return map;
-	    }
-	
-	@RequestMapping(value = "/a_vehicles/add", method = RequestMethod.POST)
-	public Map<String,Object> add(@RequestBody VehicleDto dto,Principal principal) throws IOException {
-		Map<String,Object> map = new HashMap<>();
-		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
-		Groups group = grepository.findByNameAndCompanyCompanyId("Default", comp.getCompanyId()).get();
-		Vehicle vehicle = new Vehicle(dto.getMake(),dto.getModelname(), comp,group,dto.getRegnumber());
-		vehicle.setSubmodel(dto.getSubmodel());
-		//vehicle.setRegnumber(dto.getRegnumber());
-		vehicle.setModelyear(dto.getModelyear());
-		vehicle=vrepository.save(vehicle);
-		map.put("status", vehicle);
-		return map;
-	    }
-	
-	@RequestMapping(value = "/a_vehicles/update", method = RequestMethod.POST)
-	public Map<String,Object> update(@RequestBody VehicleDto dto,Principal principal) throws IOException, ParseException {
-		Map<String,Object> map = new HashMap<>();
-		Vehicle vehicle = vrepository.findOne(dto.getVehicleId());
-		vehicle.setMake(dto.getMake());
-		vehicle.setModelname(dto.getModelname());
-		vehicle.setSubmodel(dto.getSubmodel());
-		vehicle.setRegnumber(dto.getRegnumber());
-		vehicle.setModelyear(dto.getModelyear());
-		vehicle=vrepository.save(vehicle);
-		map.put("status", vehicle);
-		return map;
-	    }
+	@RequestMapping(value = "/a_startactivity/startactivity", method = RequestMethod.POST)
+	public List<Activity> startactivity(@RequestBody StartactivityDto sactivity ,Principal principal) {
+		Driver driver = drepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get();
+		Vehicle vehicle = vrepository.findOne(sactivity.getVehicleID()); //driver.company.CompanyId.eq(x);
+		String [] str =sactivity.getStartReading_snap().split(",");
+		String snap = Base64Utils.encodeToString(thumbnailService.resize(str[1], 300));
+
+		List<Activity> list = new ArrayList<Activity>();
+		list.add(arepository.save(new Activity(driver, vehicle, sactivity.getStartReading(), snap)));
+		return list;
+		
+	}
+
 	
 	@Controller
 	class A_vehiclesView{
-		@RequestMapping(value = "/a_vehicles", method = RequestMethod.GET)
+		@RequestMapping(value = "/a_startactivity", method = RequestMethod.GET)
 		public String getView(Principal principal){
-			return "a_vehicles";		
+			return "a_startactivity";		
 		}		
 	}
 }

@@ -23,7 +23,7 @@ public class MediatorCTRL {
 
 		String username= SecurityUtils.getLoggedInUserName(principal);
 		User owner=urepository.findByUserName(username).orElse(new User());
-		Company comp = owner.getCompany();
+		/*Company comp = owner.getCompany();
 		if(comp.getName()==null||comp.getName()==""||comp.getFuelunit()==null||comp.getDistanceunit()==null){
 			return "redirect:/setup";
 		}else if(owner.getRoles().contains(Roles.OWNER)){
@@ -32,10 +32,10 @@ public class MediatorCTRL {
 			return "redirect:/admin_dash";
 		}else if(owner.getRoles().contains(Roles.DRIVER)){
 			return "redirect:/driver_dash";
-		}
-		
+		}*/
+		return "redirect:/dashboard";
 
-		return "redirect:/fail";	
+		//return "redirect:/fail";	
 	}
 
 }

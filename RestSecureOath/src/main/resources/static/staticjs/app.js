@@ -24,8 +24,16 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 	}).when('/a_vehicles', {
 		templateUrl : '/a_vehicles',
 		controller : 'a_vehicles'
-	})
-	.otherwise('/home');
+	}).when('/a_activity', {
+		templateUrl : '/a_activity',
+		controller : 'a_activity'
+	}).when('/a_startactivity', {
+		templateUrl : '/a_startactivity',
+		controller : 'a_startactivity'
+	}).when('/a_endactivity', {
+		templateUrl : '/a_endactivity',
+		controller : 'a_endactivity'
+	}).otherwise('/home');
 	/*$locationProvider
 	.html5Mode({enabled: true,
 	      requireBase: false

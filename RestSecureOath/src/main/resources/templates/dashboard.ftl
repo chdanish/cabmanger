@@ -20,8 +20,13 @@
   <script src="static/staticjs/controllers/a_drivers.js"></script>
   <script src="static/staticjs/controllers/a_admins.js"></script>
   <script src="static/staticjs/controllers/a_vehicles.js"></script>
-  <script src="static/staticjs/directive/datevalidation.js"></script>
+  <script src="static/staticjs/controllers/a_activity.js"></script>
+  <script src="static/staticjs/controllers/a_startactivity.js"></script>
+  <script src="static/staticjs/controllers/a_endactivity.js"></script>
+  <script src="static/staticjs/filter/datetime.js"></script>
+  <script src="static/staticjs/filter/unique.js"></script>
   <script src="static/staticjs/filter/groupselction.js"></script>
+  <script src="static/staticjs/directive/datevalidation.js"></script>
   <script src="static/staticjs/directive/navbar.js"></script>
   <script src="static/staticjs/directive/password.js"></script>
   <script src="static/staticjs/directive/modalDialog.js"></script>
@@ -48,14 +53,18 @@
           <li class="navigation-items"> <a ng-href="#a_vehicles">Vehicles</a> 
           </li>
           <li role="navigation-items" class="dropdown">
-		    <a ng-click="activitymenuswitch()" class="dropdown-toggle" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
+		    <a ng-click="activitymenuswitch()" ng-href="#a_activity" class="dropdown-toggle" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">
 		      Activity <span class="caret"></span>
 		    </a>
 		    <ul class="dropdown-menu" style="display: block" ng-if="activitymenu" >
-		      <li><a xng-href="$">Driver Activity</a></li>
-		      <li><a xng-href="$">Vehicle Activity</a></li>
+		      <li><a xng-href="$">Approved</a></li>
+		      <li><a xng-href="$">Pending</a></li>
 		    </ul>
 		  </li>
+		  <li class="navigation-items"> <a ng-href="#a_startactivity">Start Activity</a> 
+          </li>
+          <li class="navigation-items"> <a ng-href="#a_endactivity">End Activity</a> 
+          </li>
           <li class="navigation-items"> <a ng-href="#a_setup">Settings</a> 
           </li>
           <li class="navigation-items"> <a  ng-click="logout()">Logout</a> 
