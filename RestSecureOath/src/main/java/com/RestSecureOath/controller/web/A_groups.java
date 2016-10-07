@@ -2,7 +2,6 @@ package com.RestSecureOath.controller.web;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,36 +14,23 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.RestSecureOath.repo.GroupsRepository;
 import com.RestSecureOath.repo.UserRepositoryX;
 import com.RestSecureOath.repo.VehicleRepository;
-import com.RestSecureOath.requestdto.VehicleDto;
 import com.RestSecureOath.service.StorageService;
 import com.RestSecureOath.service.ThumbnailService;
 import com.RestSecureOath.util.SecurityUtils;
 import com.RestSecureOath.domain.Company;
-import com.RestSecureOath.domain.Driver;
 import com.RestSecureOath.domain.Groups;
 import com.RestSecureOath.domain.QGroups;
 import com.RestSecureOath.domain.QUser;
-import com.RestSecureOath.domain.QVehicle;
 import com.RestSecureOath.domain.Roles;
 import com.RestSecureOath.domain.User;
-import com.RestSecureOath.domain.Vehicle;
-import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.DslExpression;
-import com.querydsl.core.types.dsl.StringExpression;
 
 @RestController
 public class A_groups {
