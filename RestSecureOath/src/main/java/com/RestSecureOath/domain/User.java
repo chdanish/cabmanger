@@ -12,6 +12,7 @@ import com.RestSecureOath.util.CustomDateSerializer;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Entity
+//@Inheritance(strategy=InheritanceType.JOINED)
 @Table(name = "USER")
 public class User implements Serializable {
 
@@ -33,7 +34,7 @@ public class User implements Serializable {
 	@Column(name = "password")
 	private String password;
 
-	@Column(name = "email")
+	@Column(name = "email")//https://docs.oracle.com/cd/E19798-01/821-1841/gijst/index.html
 	private String email;
 	
 	@Column(name = "firstname")

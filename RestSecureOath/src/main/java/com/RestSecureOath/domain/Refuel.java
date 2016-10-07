@@ -2,6 +2,7 @@ package com.RestSecureOath.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -17,8 +19,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-@Table(name="REFUEL",uniqueConstraints = @UniqueConstraint(
-		columnNames = { "vehicleid", "activityid","userid" }))
+@Table(name="REFUEL")
 public class Refuel implements Serializable {
 
 
@@ -33,17 +34,14 @@ public class Refuel implements Serializable {
 	private long refuelId;
 	
 	@ManyToOne
-	@JoinColumn(name="vehicleid", nullable = false)
 	@JsonBackReference
 	private Vehicle vehicle;
 	
-	@OneToOne
-	@JoinColumn(name="activityid", nullable = false)
+	@ManyToOne(cascade=CascadeType.ALL)
 	@JsonManagedReference
 	private Activity activity;
 	
-	@OneToOne
-	@JoinColumn(name="userid", nullable = false)
+	@ManyToOne
 	@JsonManagedReference
 	private Driver driver;
 
@@ -56,11 +54,11 @@ public class Refuel implements Serializable {
 	 * @param activity
 	 * @param driver
 	 */
-	public Refuel(Vehicle vehicle, Activity activity, Driver driver) {
+	public Refuel( Activity activity) {
 		super();
-		this.vehicle = vehicle;
+		this.vehicle = activity.getVehicle();
 		this.activity = activity;
-		this.driver = driver;
+		this.driver = activity.getDriver();
 	}
 
 
@@ -121,6 +119,9 @@ public class Refuel implements Serializable {
 	public void setDriver(Driver driver) {
 		this.driver = driver;
 	}
+	
+	
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

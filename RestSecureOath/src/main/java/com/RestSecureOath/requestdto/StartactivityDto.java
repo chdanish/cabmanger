@@ -9,7 +9,7 @@ public class StartactivityDto implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	long startReading;
+	Long startReading;
 	String startReading_snap;
 	long vehicleID;
 	
@@ -17,13 +17,13 @@ public class StartactivityDto implements Serializable{
 	/**
 	 * @return the startReading
 	 */
-	public long getStartReading() {
+	public Long getStartReading() {
 		return startReading;
 	}
 	/**
 	 * @param startReading the startReading to set
 	 */
-	public void setStartReading(long startReading) {
+	public void setStartReading(Long startReading) {
 		this.startReading = startReading;
 	}
 	/**

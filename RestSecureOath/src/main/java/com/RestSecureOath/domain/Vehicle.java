@@ -18,6 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Cascade;
 
 import com.RestSecureOath.util.CustomDateSerializer;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -70,10 +73,10 @@ public class Vehicle implements Serializable {
 	@JsonBackReference
 	private Company company;
 	
-	@OneToMany(mappedBy="activityID",targetEntity=Activity.class,orphanRemoval=true)
+	@OneToMany(mappedBy="vehicle",cascade=CascadeType.ALL,orphanRemoval=true)
 	private Set<Activity> activity= new HashSet<Activity>(0);
 	
-	@OneToMany(mappedBy="refuelId",targetEntity=Refuel.class,orphanRemoval=true)
+	@OneToMany(mappedBy="vehicle",targetEntity=Refuel.class,orphanRemoval=true)
 	@JsonManagedReference
 	private Set<Refuel> refuel = new HashSet<Refuel>(0);
 
@@ -169,21 +172,7 @@ public class Vehicle implements Serializable {
 		this.createdAT = createdAT;
 	}
 
-	/**
-	 * @return the activity
-	 */
-	public Set<Activity> getActivity() {
-		return activity;
-	}
 
-	/**
-	 * @param activity the activity to set
-	 */
-	public void setActivity(Activity activity) {
-		this.activity.add(activity);
-	}
-	
-	
 
 	/**
 	 * @return the snap
@@ -243,13 +232,61 @@ public class Vehicle implements Serializable {
 		this.modelyear = modelyear;
 	}
 
+	
+	/**
+	 * @return the groups
+	 */
+	public Groups getGroups() {
+		return groups;
+	}
+
+	/**
+	 * @param groups the groups to set
+	 */
+	public void setGroups(Groups groups) {
+		this.groups = groups;
+	}
+
+	/**
+	 * @return the refuel
+	 */
+	public Set<Refuel> getRefuel() {
+		return refuel;
+	}
+
+	/**
+	 * @param refuel the refuel to set
+	 */
+	public void setRefuel(Set<Refuel> refuel) {
+		this.refuel = refuel;
+	}
+	
+	/**
+	 * @return the activity
+	 */	
+	public Set<Activity> getActivity() {
+		return activity;
+	}
+
+	/**
+	 * @param activity the activity to set
+	 */
+	public void setActivity(Set<Activity> activity) {
+		this.activity = activity;
+	}
+
+	@Transient
+	public boolean isNew() {
+	    return (this.vehicleId == null);
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "Vehicle [vehicleId=" + vehicleId + ", createdAT=" + createdAT + ", make=" + make + ", model=" + modelname
-				+ ", activity=" + activity + ", ride=" + refuel + "]";
+				+ ", activity=" + "" + ", ride=" + refuel + "]";
 	}
 
 	

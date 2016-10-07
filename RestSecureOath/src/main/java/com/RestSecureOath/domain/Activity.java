@@ -5,18 +5,26 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
-import com.RestSecureOath.util.CustomVehicleSerializer;
+import org.hibernate.annotations.Cascade;
+
+import com.RestSecureOath.util.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -34,12 +42,14 @@ public class Activity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="activityid")
-	private long activityID;
+	private Long activityID;
 	
-	@ManyToOne(optional=false)
+	@ManyToOne
+	@JsonSerialize(using=CustomDriverSerializer.class)
+	@JoinColumn(name="DRIVERID", referencedColumnName="userId")
 	private Driver driver;
 	
-	@ManyToOne(targetEntity=Vehicle.class,optional=false)
+	@ManyToOne
 	@JsonSerialize(using=CustomVehicleSerializer.class)
 	private Vehicle vehicle;
 	
@@ -47,17 +57,20 @@ public class Activity implements Serializable {
 	@JsonManagedReference
 	private Set<Ride> ride = new HashSet<Ride>(0);
 	
+	@OneToMany(mappedBy="activity",targetEntity=Refuel.class,orphanRemoval=true)
+	private Set<Refuel> refuel= new HashSet<Refuel>(0);
+	
 	@Column(name="validity")
 	private Date validity;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="created_at",updatable=false,nullable=false)
+	@Column(name="created_at")
 	private Date createdAT;
 	
-	@Column(name="start_reading",nullable=false)
+	@Column(name="start_reading")
 	private long startReading;
 	
-	@Column(name="start_reading_snap",length=20000,nullable=false)
+	@Column(name="start_reading_snap",length=20000)
 	private String startReading_snap;
 	
 	@Column(name="ended_at")
@@ -72,31 +85,32 @@ public class Activity implements Serializable {
 	@Column(name="refuel_litre")
 	private long refuel_litre;
 	
-	@Column(name="refuel")
-	private Refuel refuel;
+	
 	
 	public Activity() {
 	}
 
 	public Activity(Driver driver,Vehicle vehicle,long startReading,String startReading_snap) {
+		
 		this.createdAT= new Date();
 		this.driver=driver;
 		this.vehicle=vehicle;
 		this.startReading=startReading;
 		this.startReading_snap=startReading_snap;
+		
 	}
 
 	/**
 	 * @return the activityID
 	 */
-	public long getActivityID() {
+	public Long getActivityID() {
 		return activityID;
 	}
 
 	/**
 	 * @param activityID the activityID to set
 	 */
-	public void setActivityID(long activityID) {
+	public void setActivityID(Long activityID) {
 		this.activityID = activityID;
 	}
 
@@ -112,20 +126,6 @@ public class Activity implements Serializable {
 	 */
 	public void setDriver(Driver driver) {
 		this.driver = driver;
-	}
-
-	/**
-	 * @return the vehicle
-	 */
-	public Vehicle getVehicle() {
-		return vehicle;
-	}
-
-	/**
-	 * @param vehicle the vehicle to set
-	 */
-	public void setVehicle(Vehicle vehicle) {
-		this.vehicle = vehicle;
 	}
 
 	/**
@@ -227,16 +227,30 @@ public class Activity implements Serializable {
 	}
 
 	/**
+	 * @return the vehicle
+	 */
+	public Vehicle getVehicle() {
+		return vehicle;
+	}
+
+	/**
+	 * @param vehicle the vehicle to set
+	 */
+	public void setVehicle(Vehicle vehicle) {
+		this.vehicle = vehicle;
+	}
+
+	/**
 	 * @return the refuel
 	 */
-	public Refuel getRefuel() {
+	public Set<Refuel> getRefuel() {
 		return refuel;
 	}
 
 	/**
 	 * @param refuel the refuel to set
 	 */
-	public void setRefuel(Refuel refuel) {
+	public void setRefuel(Set<Refuel> refuel) {
 		this.refuel = refuel;
 	}
 
@@ -273,6 +287,43 @@ public class Activity implements Serializable {
 	 */
 	public void setEndReading_snap(String endReading_snap) {
 		this.endReading_snap = endReading_snap;
+	}
+
+
+	
+	/**
+	 * @return the vehiclex
+	 *//*
+	public Vehiclex getVehiclex() {
+		return vehiclex;
+	}
+
+	*//**
+	 * @param vehiclex the vehiclex to set
+	 *//*
+	public void setVehiclex(Vehiclex vehiclex) {
+		this.vehiclex = vehiclex;
+	}*/
+
+	/**
+	 * @return the vehicle
+	 *//*
+	public Vehicle getVehicle() {
+		return vehicle;
+	}
+
+	*//**
+	 * @param vehicle the vehicle to set
+	 *//*
+	public void setVehicle(Vehicle vehicle) {
+		this.vehicle = vehicle;
+	}*/
+	
+	
+
+	@Transient
+	public boolean isNew() {
+	    return (this.activityID == null);
 	}
 	
 	

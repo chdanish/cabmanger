@@ -10,12 +10,17 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -52,11 +57,12 @@ public class Driver extends User {
 	private Date licenseID_expiry; 
 		
 
-	@OneToMany(mappedBy="activityID",targetEntity=Activity.class,orphanRemoval=true)
+	@OneToMany(mappedBy="driver",targetEntity=Activity.class,orphanRemoval=true)
 	private Set<Activity> activity= new HashSet<Activity>(0);
 	
-	@Column(name="refuel")
-	private Refuel refuel;
+	@OneToMany(mappedBy="driver",targetEntity=Refuel.class,orphanRemoval=true)
+	@JsonManagedReference
+	private Set<Refuel> refuel = new HashSet<Refuel>(0);
 	
 	/**
 	 * 
@@ -204,26 +210,19 @@ public class Driver extends User {
 	public void setActivity(Set<Activity> activity) {
 		this.activity = activity;
 	}
-
 	/**
 	 * @return the refuel
 	 */
-	public Refuel getRefuel() {
+	public Set<Refuel> getRefuel() {
 		return refuel;
 	}
 
 	/**
 	 * @param refuel the refuel to set
 	 */
-	public void setRefuel(Refuel refuel) {
+	public void setRefuel(Set<Refuel> refuel) {
 		this.refuel = refuel;
 	}
-
-
-	
-
-
-	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

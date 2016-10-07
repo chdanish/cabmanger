@@ -53,10 +53,7 @@ app.controller('a_endactivity', function($rootScope,$scope,cacheService,
 			console.log($scope.endactivityDTO);
 			cacheService.post('/a_endactivity/endactivity',$scope.endactivityDTO).then(function(data){
 				  console.log(data);
-				  if(!data[0]){
-						 // $location.path("/a_startactivity");
-						  $scope.showdata=false;
-					  }
+				  $scope.showdata=false;
 			  });
 		}
 	  

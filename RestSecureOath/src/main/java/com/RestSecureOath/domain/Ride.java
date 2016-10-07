@@ -51,4 +51,60 @@ public class Ride implements Serializable {
 		this.createdAT=new Date();
 	}
 
+	/**
+	 * @return the rideID
+	 */
+	public long getRideID() {
+		return rideID;
+	}
+
+	/**
+	 * @param rideID the rideID to set
+	 */
+	public void setRideID(long rideID) {
+		this.rideID = rideID;
+	}
+
+	/**
+	 * @return the activity
+	 */
+	public Activity getActivity() {
+		return activity;
+	}
+
+	/**
+	 * @param activity the activity to set
+	 */
+	public void setActivity(Activity activity) {
+		this.activity = activity;
+	}
+
+	/**
+	 * @return the fare
+	 */
+	public long getFare() {
+		return fare;
+	}
+
+	/**
+	 * @param fare the fare to set
+	 */
+	public void setFare(long fare) {
+		this.fare = fare;
+	}
+
+	/**
+	 * @return the createdAT
+	 */
+	public Date getCreatedAT() {
+		return createdAT;
+	}
+
+	/**
+	 * @param createdAT the createdAT to set
+	 */
+	public void setCreatedAT(Date createdAT) {
+		this.createdAT = createdAT;
+	}
+
 }

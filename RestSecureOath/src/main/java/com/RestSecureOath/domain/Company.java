@@ -8,10 +8,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -70,7 +72,7 @@ public class Company implements Serializable {
 	@JsonManagedReference
 	private Set<Vehicle> vehicle = new HashSet<Vehicle>(0);
 
-	@OneToMany(mappedBy="company",orphanRemoval=true)
+	@OneToMany(mappedBy="company",orphanRemoval=true,cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JsonManagedReference
 	private Set<Groups> groups = new HashSet<Groups>(0);
 
@@ -209,6 +211,38 @@ public class Company implements Serializable {
 	public void setVehicle(Set<Vehicle> vehicle) {
 		this.vehicle = vehicle;
 	}
+
+	/**
+	 * @return the registration
+	 */
+	public String getRegistration() {
+		return registration;
+	}
+
+
+	/**
+	 * @param registration the registration to set
+	 */
+	public void setRegistration(String registration) {
+		this.registration = registration;
+	}
+
+
+	/**
+	 * @return the groups
+	 */
+	public Set<Groups> getGroups() {
+		return groups;
+	}
+
+
+	/**
+	 * @param groups the groups to set
+	 */
+	public void setGroups(Set<Groups> groups) {
+		this.groups = groups;
+	}
+
 
 	@Override
 	public String toString() {

@@ -5,9 +5,16 @@ import java.security.Principal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +24,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,6 +71,13 @@ public class A_startactivity {
 	private final ActivityRepository arepository;
 	
 	private final DriverRepository drepository;
+	
+	private EntityManager entityManager;
+	
+	@PersistenceContext(type=PersistenceContextType.TRANSACTION)
+    public void setEntityManager(EntityManager entityManager) {
+        this. entityManager = entityManager;
+    }
 	/**
 	 * @param vrepository
 	 * @param thumbnailService
@@ -90,16 +105,21 @@ public class A_startactivity {
 		return vrepository.findAll(predicate);
 	}
 	
+	long l;
 	@RequestMapping(value = "/a_startactivity/startactivity", method = RequestMethod.POST)
-	public List<Activity> startactivity(@RequestBody StartactivityDto sactivity ,Principal principal) {
-		Driver driver = drepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get();
-		Vehicle vehicle = vrepository.findOne(sactivity.getVehicleID()); //driver.company.CompanyId.eq(x);
+	@Transactional
+	public Set<Activity> startactivity(@RequestBody StartactivityDto sactivity ,Principal principal) {
+		Driver driver;Vehicle vehicle;Activity act;
+		driver = drepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get();
+		vehicle = vrepository.findOne(sactivity.getVehicleID()); //driver.company.CompanyId.eq(x);
 		String [] str =sactivity.getStartReading_snap().split(",");
 		String snap = Base64Utils.encodeToString(thumbnailService.resize(str[1], 300));
+		Set<Activity> activities = vehicle.getActivity();
+		activities.add( new Activity(driver, vehicle, sactivity.getStartReading(), snap));
+		vehicle.setActivity(activities);
+		vehicle = vrepository.save(vehicle);
 
-		List<Activity> list = new ArrayList<Activity>();
-		list.add(arepository.save(new Activity(driver, vehicle, sactivity.getStartReading(), snap)));
-		return list;
+		return vehicle.getActivity();
 		
 	}
 
