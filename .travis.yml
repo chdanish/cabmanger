@@ -1,6 +1,4 @@
 language: java
 jdk: oraclejdk8
 
-before_install:
- - chmod +x mvn
- - chmod +x mvnw
+script: cd RestSecureOath && mvn clean && mvn install
