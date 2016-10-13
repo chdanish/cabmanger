@@ -1,4 +1,5 @@
+##
 language: java
 jdk: oraclejdk8
 
-script: cd RestSecureOath && mvn clean && mvn install
+script: cd RestSecureOath && mvn clean && mvn install -Dmaven.test.skip=true && mvn package -Dmaven.test.skip=true
