@@ -33,12 +33,22 @@ public class Refuel implements Serializable {
 	private Vehicle vehicle;
 	
 	@ManyToOne(cascade=CascadeType.ALL)
-	@JsonManagedReference
+	@JsonBackReference
 	private Activity activity;
 	
 	@ManyToOne
-	@JsonManagedReference
+	@JsonBackReference
 	private Driver driver;
+	
+	@Column(name="volume")
+	private float volume;
+	
+	@Column(name="cost")
+	private float cost;
+	
+	@Column(name="rate")
+	private float rate;
+	
 
 	public Refuel() {
 		// TODO Auto-generated constructor stub
@@ -55,6 +65,36 @@ public class Refuel implements Serializable {
 		this.activity = activity;
 		this.driver = activity.getDriver();
 	}
+	
+	public Refuel( Activity activity,Float volume,Float cost,Float rate) {
+		super();
+		this.activity = activity;
+		this.vehicle = activity.getVehicle();		
+		this.driver = activity.getDriver();
+		
+		if(volume==null&&cost!=null&&rate!=null){
+			this.volume	= cost/rate;
+			this.cost 	= cost;
+			this.rate	= rate;
+			
+		}else if(volume!=null&&cost==null&&rate!=null){
+			this.volume	= volume;
+			this.cost 	= volume*rate;
+			this.rate	= rate;
+			
+		}else if(volume!=null&&cost!=null&&rate==null){
+			this.volume	= volume;
+			this.cost 	= cost;
+			this.rate	= cost/volume;
+			
+		}else if(volume!=null&&cost!=null&&rate!=null){
+			this.volume	= volume;
+			this.cost 	= cost;
+			this.rate	= rate;
+			
+		}
+	}
+	
 
 
 
@@ -114,18 +154,50 @@ public class Refuel implements Serializable {
 	public void setDriver(Driver driver) {
 		this.driver = driver;
 	}
-	
-	
+
 	
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * @return the volume
 	 */
-	@Override
-	public String toString() {
-		return "Refuel [refuelId=" + refuelId + ", driver=" + driver + "]";
+	public float getVolume() {
+		return volume;
 	}
-	
-	
+
+	/**
+	 * @param volume the volume to set
+	 */
+	public void setVolume(float volume) {
+		this.volume = volume;
+	}
+
+	/**
+	 * @return the cost
+	 */
+	public float getCost() {
+		return cost;
+	}
+
+	/**
+	 * @param cost the cost to set
+	 */
+	public void setCost(float cost) {
+		this.cost = cost;
+	}
+
+	/**
+	 * @return the rate
+	 */
+	public float getRate() {
+		return rate;
+	}
+
+	/**
+	 * @param rate the rate to set
+	 */
+	public void setRate(float rate) {
+		this.rate = rate;
+	}
+
 
 }

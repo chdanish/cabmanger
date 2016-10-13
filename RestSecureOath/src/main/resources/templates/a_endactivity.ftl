@@ -34,8 +34,10 @@ min-width: 30% !important;
 <!-- <body>
 <div class="container col-xs-12 col-md-12 col-lg-12" style="border:solid #ff0000 1px; ">
  -->	<div class="row band  col-xs-11" >
-	<div class="row" >
-	<!-- <button ng-click="toggleModal()" class="btn col-xs-2">Filter</button> -->
+	<div ng-if="showdata" class="row" >
+	 <button ng-click="toggleaddrefuel()" class="btn col-xs-2">Add Refuel</button> 
+	 <span ></span>
+	 <button ng-click="toggleModal()" class="btn col-xs-2">Add Ride</button> 
 	</div>
 	<div class="row "  >
 			<div  class="scrollable" >
@@ -86,7 +88,7 @@ min-width: 30% !important;
 			
 			<hr style="width: 95%;">
 			<button ng-click="endactivitysubmit()" class="btn btn-primary" ng-disabled="myForm.$invalid">
-			<span></span>Submit
+			<span></span>End Activity
 			</button>
         </div>
       </div>
@@ -96,10 +98,10 @@ min-width: 30% !important;
 	
 	</div>
 	
-	<modal-dialog box-width="70%" box-height="90%" show="startactivity"  >
+	<modal-dialog box-width="70%" box-height="90%" show="addrefuel"  >
     <div class="row">
       <div class="col-md-12">
-        <h3>Add New Driver</h3>
+        <h3>Add Refuel</h3>
         <hr class="col-md-12" style="border-top:1px solid darkblue; width: 95%"/>
       </div>
     </div>
@@ -113,31 +115,64 @@ min-width: 30% !important;
 			  <div class="form-group">
 			    <label class="col-sm-2 control-label">Meter Reading:</label>
 			    <div class="col-sm-6">
-			    <input type="text" class="form-control" ng-model="activityDTO.startReading" ng-disabled="!edit" placeholder="First Name" required />
+			    <input type="text" class="form-control" ng-model="xreading" ng-disabled="!edit" placeholder="(Optional)"  />
 			    </div>
 			  </div>
+			  <div class="form-group">
+			    <label class="col-sm-2 control-label">Refuel</label>
+			    <div class="col-sm-6">**Select any two options below
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label class="col-sm-2 control-label">Volume:</label>
+			    <div class="col-sm-6">
+			    <input type="checkbox" ng-disabled="checkboxModel.cost&&checkboxModel.rate" ng-model="checkboxModel.volume">
+			    <input type="number" class="form-control" ng-model="addrefuelDTO.volume" ng-disabled="!checkboxModel.volume" placeholder="volume" />
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label class="col-sm-2 control-label">Cost:</label>
+			    <div class="col-sm-6">
+			    <input type="checkbox" ng-disabled="checkboxModel.volume&&checkboxModel.rate" ng-model="checkboxModel.cost">
+			    <input type="number" class="form-control" ng-model="addrefuelDTO.cost" ng-disabled="!checkboxModel.cost" placeholder="cost" />
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label class="col-sm-2 control-label">Rate:</label>
+			    <div class="col-sm-6">
+			    <input type="checkbox" ng-disabled="checkboxModel.volume&&checkboxModel.cost" ng-model="checkboxModel.rate">
+			    <input type="number" class="form-control" ng-model="addrefuelDTO.rate" ng-disabled="!checkboxModel.rate" placeholder="rate"  />
+			    </div>
+			  </div>			  
+			</form>
 			
+			<hr style="width: 95%;">
+			<button ng-click="submitaddrefuel()" class="btn btn-primary" ng-disabled="submitbutton3||myForm.$invalid">
+			<span></span>Submit
+			</button>
+        </div>
+      </div>
+    </div>
+  </modal-dialog>
+  
+  <modal-dialog box-width="70%" box-height="90%" show="addride"  >
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Add Ride</h3>
+        <hr class="col-md-12" style="border-top:1px solid darkblue; width: 95%"/>
+      </div>
+    </div>
+    <div  class="scrollable" >
+      <div class="col-sm-12">
+      	<div  class="col-sm-12">
+            <h3 >Start new Activity:</h3>
+	
+			
+			<form class="form-horizontal" name="myForm" novalidate>
 			  <div class="form-group">
-			  	<img data-ng-src="data:image/png;base64,ajkshdkjashd" class="profileimg" />
-			    <label class="col-sm-2 control-label">Meter Snap:</label>
+			    <label class="col-sm-2 control-label">Fare:</label>
 			    <div class="col-sm-6">
-			    <input ng-model="files"  driverid="{{x.vehicleId}}"  onchange="angular.element(this).scope().file_changed(this,files)"
-					 type="file" accept="image/*">
-			    </div>
-			  </div>
-			  
-			  <div class="form-group">
-			  	<label class="col-sm-2 control-label">Vehicle:</label>
-			    <div class="col-sm-6">
-			    Make: <select name="vehiclelist" id="vehiclelist" ng-model="make" 
-						ng-options="option.make for option in vehiclelist | unique:'make'" >
-			    </select> <br/>
-			    Model name:<select name="vehiclelist" id="vehiclelist" ng-model="modelname" 
-						ng-options="option.modelname for option in vehiclelist | unique:'modelname' | filter:{make:make.make}" >
-			    </select> <br/>
-			    Registration No#:<select name="vehiclelist" id="vehiclelist" ng-model="activityDTO.vehicle" 
-						ng-options="option.regnumber for option in vehiclelist | unique:'regnumber'| filter:{make:make.make} | filter:{modelname:modelname.modelname}" >
-			    </select>  <br/>
+			    <input type="text" class="form-control" ng-model="activityDTO.startReading" ng-disabled="!edit" placeholder="e.g 200" required />
 			    </div>
 			  </div>
 			</form>

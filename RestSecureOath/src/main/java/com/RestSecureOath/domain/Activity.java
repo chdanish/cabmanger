@@ -285,34 +285,6 @@ public class Activity implements Serializable {
 
 
 	
-	/**
-	 * @return the vehiclex
-	 *//*
-	public Vehiclex getVehiclex() {
-		return vehiclex;
-	}
-
-	*//**
-	 * @param vehiclex the vehiclex to set
-	 *//*
-	public void setVehiclex(Vehiclex vehiclex) {
-		this.vehiclex = vehiclex;
-	}*/
-
-	/**
-	 * @return the vehicle
-	 *//*
-	public Vehicle getVehicle() {
-		return vehicle;
-	}
-
-	*//**
-	 * @param vehicle the vehicle to set
-	 *//*
-	public void setVehicle(Vehicle vehicle) {
-		this.vehicle = vehicle;
-	}*/
-	
 	
 
 	@Transient
