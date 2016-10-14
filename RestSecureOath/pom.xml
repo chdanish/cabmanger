@@ -21,6 +21,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<gwtVersion>2.7.0</gwtVersion>
+		<googleGin>2.1.2</googleGin>
 		<java.version>1.8</java.version>
 	</properties>
 
@@ -82,6 +84,16 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- Adding GWT -->
+		<dependency>
+	        <groupId>com.google.gwt</groupId>
+	        <artifactId>gwt-user</artifactId>
+	        <version>${gwtVersion}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>com.google.gwt.inject</groupId>
+	        <artifactId>gin</artifactId>
+	        <version>${googleGin}</version>
+	    </dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -107,6 +119,25 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
+            <!-- Compile GWT views -->
+            <plugin>
+	            <groupId>org.codehaus.mojo</groupId>
+	            <artifactId>gwt-maven-plugin</artifactId>
+	            <version>${gwtVersion}</version>
+	            <executions>
+	                <execution>
+	                    <goals>
+	                        <goal>compile</goal>
+	                    </goals>
+	                </execution>
+	            </executions>
+	            <configuration>
+	                <runTarget>GwtWebApp.html</runTarget>
+	                <persistentunitcachedir>${project.build.directory}</persistentunitcachedir>
+	                <deploy>${project.build.directory}/gwt-deploy</deploy>
+	                <webappDirectory>${project.build.directory}/classes/public</webappDirectory>
+	            </configuration>
+	        </plugin>
             <!-- Generates the JPA static meta model -->
             <plugin>
 			      <groupId>com.mysema.maven</groupId>
