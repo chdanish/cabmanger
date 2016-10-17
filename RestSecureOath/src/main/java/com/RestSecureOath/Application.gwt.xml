@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.7.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.7.0/distro-source/core/src/gwt-module.dtd">
+<module rename-to="gwt">
+	<!-- <inherits name="fr.lteconsulting.angular2gwt.Angular2Gwt" /> -->
+
+	<source path="client"/>
+	<source path="shared"/>
+	
+	<inherits name='com.google.gwt.user.User' />
+	
+	<inherits name='com.google.gwt.i18n.I18N' />
+	
+	<inherits name="org.fusesource.restygwt.RestyGWT"/> <!-- http://www.gwtproject.org/doc/latest/DevGuideServerCommunication.html -->
+	
+	<inherits name="com.google.gwt.uibinder.UiBinder"/>
+	
+	<inherits name="com.google.gwt.resources.Resources" />
+	
+	<inherits name="com.google.gwt.user.RemoteService" />
+	
+	<inherits name="com.google.gwt.logging.Logging"/>
+	
+	<servlet path="/check"  class="com.RestSecureOath.server.StockPriceServiceImpl"/>
+
+	 <entry-point class="com.RestSecureOath.client.Application" /> 
+	 
+	 
+
+	<!-- If you want the application to work with official Angular bundle, -->
+	<!-- you need to use the SSO linker. But then SuperDevMode will not work correctly with Angular -->
+	<!-- <add-linker name="sso" /> -->
+</module>

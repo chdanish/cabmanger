@@ -1,0 +1,7 @@
+1). Client directory must not include server side code
+reference >> http://blog.mental.ninja/2006/06/trivial-gwt-example.html
+
+2). Client directory must include all source need to translate in to js.
+
+3). For>> [ERROR] 'com.RestSecureOath.client.StockPrice[]' has no instantiable subtypes
+means "StockPrice" has no zero argument constructor.

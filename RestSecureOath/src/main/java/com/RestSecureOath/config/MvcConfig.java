@@ -8,6 +8,9 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.google.gwt.core.client.GWT;
+
+
 @Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter {
 	
@@ -33,14 +36,23 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
  	   registry.freeMarker();
  	   
      }
+	 
+	 
 	 private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
-	            "classpath:/static/", "classpath:/static/css/", "classpath:/static/staticjs/" };
+	            "classpath:/static/", "classpath:/static/css/", "classpath:/static/staticjs/","classpath:/gwt/" };
+	 private static final String[] GWT_RESOURCE_LOCATIONS = {
+	            "classpath:/public/" };
 
 	    @Override
 	    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+	    	
 	        if (!registry.hasMappingForPattern("/static/**")) {
 	            registry.addResourceHandler("/static/**").addResourceLocations(
 	                    CLASSPATH_RESOURCE_LOCATIONS);
+	        } 
+	         if (!registry.hasMappingForPattern("/gwt/**")) {
+	            registry.addResourceHandler("/public/**").addResourceLocations(
+	            		GWT_RESOURCE_LOCATIONS);
 	        }
 	    }
 

@@ -19,6 +19,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -85,6 +87,11 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 				};
 		SpringApplication.run(sources, args);
 
+	}
+	
+	@Bean
+	public EmbeddedServletContainerFactory servletContainer() {
+	    return new TomcatEmbeddedServletContainerFactory();
 	}
 	
 	@Autowired
