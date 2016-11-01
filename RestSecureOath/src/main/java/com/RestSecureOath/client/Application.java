@@ -1,33 +1,34 @@
 package com.RestSecureOath.client;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.fusesource.restygwt.client.Resource;
-import org.fusesource.restygwt.client.RestServiceProxy;
 
+import com.RestSecureOath.client.domain.Hateoas;
 import com.RestSecureOath.client.service.StockPriceService;
 import com.RestSecureOath.client.service.StockPriceServiceAsync;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.logging.client.HasWidgetsLogHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
-import java.util.logging.*;
+import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * This is the application entry point. It just bootstraps Angular...
  */
@@ -48,17 +49,17 @@ public class Application implements EntryPoint{
 	  }
 
 	  // The list of data to display.
-	  private static List<Contact> CONTACTS = Arrays.asList(new Contact("John",
-	      "123 Fourth Road","+92-345-5522123"), new Contact("Mary", "222 Lancer Lane","+91-445-2522123"));
+	  private static List<Contact> CONTACTS = new LinkedList<Contact>(Arrays.asList(new Contact("John",
+	      "123 Fourth Road","+92-345-5522123"), new Contact("Mary", "222 Lancer Lane","+91-445-2522123")));
 	//https://github.com/apazzolini/blc-docs/blob/3b00f6c89e5bd4311eec16a190aaf0d896afc11d/Tutorials/Admin-Tutorials/Invoking-a-Remote-Service.md
 	
 	private static final StockPriceServiceAsync stockPriceSvc = (StockPriceServiceAsync) GWT.create(StockPriceService.class);
 	private static final Resource resource = new Resource(  "http://localhost:8080/check");
+	static VerticalPanel customLogArea = new VerticalPanel();
 	private static Logger logger = Logger.getLogger("");
-	/*static {
-        ServiceDefTarget endpoint = (ServiceDefTarget) stockPriceSvc;
-        endpoint.setServiceEntryPoint("admin.mycompany.service");
-    }*/
+	static{
+		logger.addHandler(new HasWidgetsLogHandler(customLogArea));
+	}
 	
 	private static class Myclick implements ClickHandler{
 		String[] symbol = {"nasdek", "mello"} ;
@@ -66,23 +67,35 @@ public class Application implements EntryPoint{
 		String url = "http://localhost:8080/a_drivers/pageable/list";
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, URL.encode(url));
 
+		public static native void console(Object msg) /*-{
+		  console.log(msg);
+		}-*/;
 		
 		
 		@Override
 		public void onClick(ClickEvent event) {
-			logger.log(Level.SEVERE, "button clicked");
+			
+			logger.severe(Integer.toString(CONTACTS.size()));
+			Console.log("button pressed");
+			CONTACTS.remove(CONTACTS.size()-1);
+			logger.severe(Integer.toString(CONTACTS.size()));
 			try {
 				  Request request = builder.sendRequest(null, new RequestCallback() {
 				    public void onError(Request request, Throwable exception) {
 				       // Couldn't connect to server (could be timeout, SOP violation, etc.)
-				    	logger.log(Level.INFO, "error");
+				    	logger.log(Level.OFF, "error");
 				    }
 
 				    public void onResponseReceived(Request request, Response response) {
 				    	
-				    	logger.log(Level.INFO, response.toString());
+				    	Console.log("hello");
+				    	logger.severe(response.toString());
+				    	Console.log("hello");
+				    	Console.log(response);
+				    	Console<Hateoas> clbytype = new Console<Hateoas>();
+						/*List<Hateoas> lst =*/  clbytype.deserializablelist(response);
 				      if (200 == response.getStatusCode()) {
-				    	  logger.log(Level.INFO, "done");
+				    	  logger.log(Level.WARNING, "done");
 				          // Process the response in response.getText()
 				      } else {
 				    	  logger.log(Level.SEVERE, "fail");
@@ -98,8 +111,31 @@ public class Application implements EntryPoint{
 		
 	}
 	
+    static class StockData extends JavaScriptObject {                              // <span style="color:black;">**(1)**</span>
+  // Overlay types always have protected, zero argument constructors.
+  protected StockData() {}                                              // <span style="color:black;">**(2)**</span>
+
+      // JSNI methods to get stock data.
+  public final native String getSymbol() /*-{ return this.symbol; }-*/; // <span style="color:black;">**(3)**</span>
+  public final native double getPrice() /*-{ return this.price; }-*/;
+  public final native double getChange() /*-{ return this.change; }-*/;
+
+      // Non-JSNI method to return change percentage.                       // <span style="color:black;">**(4)**</span>
+  public final double getChangePercent() {
+    return 100.0 * getChange() / getPrice();
+  }
+}
+	
 	
 	 public void onModuleLoad() {
+		 
+		 
+
+		    // An example of adding our own custom logging area.  Since VerticalPanel extends HasWidgets,
+		    // and handles multiple calls to add(widget) gracefully we simply create a new HasWidgetsLogHandler
+		    //  with it, and add that handler to a logger. In this case, we add it to a particular logger in order
+		    //  to demonstrate how the logger hierarchy works, but adding it to the root logger would be fine.
+		    logger.addHandler(new HasWidgetsLogHandler(customLogArea));
 		 
 
 		 String[] symbol = {"nasdek", "mello"} ;
@@ -162,5 +198,9 @@ public class Application implements EntryPoint{
 		    
 		    // Add button to test root panel.
 		    RootPanel.get().add(b);
+		    
+		    // D3 version test
+		    RootPanel.get().add(customLogArea);
+		    
 		  }
 		}

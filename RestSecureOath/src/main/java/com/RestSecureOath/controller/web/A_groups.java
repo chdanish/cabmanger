@@ -75,7 +75,7 @@ public class A_groups {
 	public Map<String,Object> add(@PathVariable String name,Principal principal) throws IOException {
 		Map<String,Object> map = new HashMap<>();
 		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
-		Groups group = grepository.save(new Groups(name,comp));
+		Groups group = grepository.save(new Groups(name,comp,1));
 		map.put("status", group);
 		return map;
 	    }

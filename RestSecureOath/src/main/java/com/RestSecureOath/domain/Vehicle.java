@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,8 +18,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.Cascade;
 
 import com.RestSecureOath.util.CustomDateSerializer;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -63,6 +60,9 @@ public class Vehicle implements Serializable {
 	@Column(name="user_snap",length=8000)
 	private String snap;
 	
+	@Column(name ="enabled")
+	private int enabled;
+	
 	@ManyToOne
 	@JoinColumn(name="groupid", nullable = false)
 	@JsonBackReference
@@ -93,7 +93,7 @@ public class Vehicle implements Serializable {
 	 * @param company
 	 */
 	public Vehicle(String make, String modelname, Company company,
-			Groups groups,String regnumber) {
+			Groups groups,String regnumber,int enabled) {
 		super();
 		this.make = make;
 		this.modelname = modelname;
@@ -101,6 +101,7 @@ public class Vehicle implements Serializable {
 		this.createdAT= new Date();
 		this.groups=groups;
 		this.regnumber=regnumber;
+		this.enabled= enabled;
 	}
 
 	/**

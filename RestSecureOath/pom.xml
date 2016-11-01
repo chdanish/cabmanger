@@ -21,7 +21,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<gwtVersion>2.7.0</gwtVersion> <!-- CHECK VERSION HERE https://gwt-maven-plugin.github.io/gwt-maven-plugin/ -->
+		<gwtVersion>2.8.0-rc3</gwtVersion> <!-- CHECK VERSION HERE https://gwt-maven-plugin.github.io/gwt-maven-plugin/ -->
 		<googleGin>2.0.0</googleGin>
 		<java.version>1.8</java.version>
 	</properties>
@@ -51,6 +51,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-freemarker</artifactId>
 		</dependency>
+		<dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <exclusions>
+            <exclusion>
+                <groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-jetty</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
 		<dependency>
 		  <groupId>com.querydsl</groupId>
 		  <artifactId>querydsl-apt</artifactId>
@@ -83,39 +93,19 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- Adding GWT -->
-		 <dependency>
-		  <groupId>com.google.web.bindery</groupId>
-		  <artifactId>requestfactory-server</artifactId>
-		  <version>${gwtVersion}</version>
+		<!-- Adding GWT Deps-->
+		<!-- ecj added for GWT -->
+		<dependency>
+		    <groupId>org.eclipse.jdt.core.compiler</groupId>
+		    <artifactId>ecj</artifactId>
+		    <version>4.6.1</version>
 		</dependency>
-		<dependency>
-              <groupId>com.google.gwt</groupId>
-              <artifactId>gwt-elemental</artifactId>
-              <version>${gwtVersion}</version>
-        </dependency>
-		<dependency>
-              <groupId>com.google.gwt</groupId>
-              <artifactId>gwt-dev</artifactId>
-              <version>${gwtVersion}</version>
-            </dependency>
-		<dependency>
-              <groupId>com.google.gwt</groupId>
-              <artifactId>gwt-codeserver</artifactId>
-              <version>${gwtVersion}</version>
-            </dependency> 
 		<!-- Needed to get the EntryPoint class -->
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>${gwtVersion}</version>
-			<!-- <scope>provided</scope> -->
-			<exclusions>
-				<exclusion>
-					<artifactId>validation-api</artifactId>
-					<groupId>javax.validation</groupId>
-				</exclusion>
-			</exclusions>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google.gwt.inject/gin -->
 		<dependency>
@@ -130,31 +120,32 @@
 		    <version>${gwtVersion}</version>
 		    <!-- <scope>provided</scope> -->
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-http -->
-		<dependency>
-		    <groupId>org.eclipse.jetty</groupId>
-		    <artifactId>jetty-http</artifactId>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
 		<dependency>
 		    <groupId>org.mockito</groupId>
 		    <artifactId>mockito-all</artifactId>
 		    <version>1.9.5</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.google.code.gwt-log/gwt-log -->
-		<!-- https://mvnrepository.com/artifact/com.google.code.gwt-log/gwt-log -->
 		<dependency>
 		    <groupId>com.google.code.gwt-log</groupId>
 		    <artifactId>gwt-log</artifactId>
 		    <version>2.6.2</version>
 		</dependency>
-
-
-
-
+		<!-- https://mvnrepository.com/artifact/com.github.gwtd3/gwt-d3-api -->
+		<dependency>
+		    <groupId>com.github.gwtd3</groupId>
+		    <artifactId>gwt-d3-api</artifactId>
+		    <version>1.2.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.gwtbootstrap/gwt-bootstrap -->
+		<dependency>
+		    <groupId>com.github.gwtbootstrap</groupId>
+		    <artifactId>gwt-bootstrap</artifactId>
+		    <version>2.3.2.0</version>
+		</dependency>
 		
-
-	  
+		
+		
 	</dependencies>
 
 	<dependencyManagement>
@@ -172,43 +163,33 @@
 	<build>
 		<plugins>
 		 <!-- Compile GWT views -->
-            <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>gwt-maven-plugin</artifactId>
-				<version>${gwtVersion}</version>
-				<executions>
-					<execution>
-					<configuration>
-						<logLevel>TRACE</logLevel> <!-- ALL DEBUG INFO -->
-						<sourceLevel>1.7</sourceLevel>
-						<compileReport>ON</compileReport>
-					</configuration>
-						<!-- <phase>compile</phase>  -->
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<runTarget>http://localhost:8080/gwt/index.html</runTarget>
-					<sourceLevel>1.7</sourceLevel>
-					<generateJsInteropExports>true</generateJsInteropExports>
-					
-					<webappDirectory>${project.build.directory}/classes/public</webappDirectory>
-					<!-- <codeServerWorkDir>${project.build.directory}/classes/public</codeServerWorkDir> -->
-					<!-- <launcherDir>${project.build.directory}/classes/public</launcherDir> -->
-					
-					<compileReport>true</compileReport>
-
-					<gen>${basedir}/target/gwt-gen</gen>
-					<workDir>${project.build.directory}/gwt-work</workDir>
-					<deploy>${project.build.directory}/gwt-deploy</deploy>
-					<!-- <persistentunitcache>true</persistentunitcache>
-					<persistentunitcachedir>${basedir}/target/gwt-unitCache</persistentunitcachedir> -->
-					<scanRemoteServiceRelativePathAnnotation>true</scanRemoteServiceRelativePathAnnotation>
-					<logLevel>ALL</logLevel>
-				</configuration>
-			</plugin> 
+            <!-- Mojo's Maven Plugin for GWT -->
+	      <plugin>
+	        <groupId>org.codehaus.mojo</groupId>
+	        <artifactId>gwt-maven-plugin</artifactId>
+	        <version>2.8.0-rc3</version>
+	        <executions>
+	          <execution>
+	          <configuration>
+	          	<sourceLevel>1.8</sourceLevel>
+	          	<logLevel>ALL</logLevel>
+	          </configuration>
+	            <goals>
+	              <goal>compile</goal>
+	            </goals>
+	          </execution>
+	        </executions>
+	        <!-- Plugin configuration. There are many available options, see 
+	          gwt-maven-plugin documentation at codehaus.org -->
+	        <configuration>
+	          <runTarget>index.html</runTarget>
+	          <sourceLevel>1.8</sourceLevel>
+	          <webappDirectory>${project.build.directory}/classes/public</webappDirectory>
+	          <modules>
+	            <module>com.RestSecureOath.Application</module>
+	          </modules>
+	        </configuration>
+	      </plugin> 
 		
 		  <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

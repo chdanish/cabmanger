@@ -9,13 +9,22 @@
 
 
 </style>
+
   <!-- <script data-require="angular.js@1.3.5" data-semver="1.3.5" src="https://code.angularjs.org/1.3.5/angular.js"></script>
-   --><script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.5/angular.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.5/angular-route.js"></script>
+   --><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-route.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-nvd3/1.0.5/angular-nvd3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/angular.dragdrop/1.07/angular-dragdrop.min.js"></script>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.4/nv.d3.css" />
+  
   <link rel="stylesheet" href="static/css/style.css" />
   <link rel="stylesheet" href="static/css/sidebar.css" />
   <link rel="stylesheet" href="static/css/navbar.css" />
   <script src="static/staticjs/app.js"></script>
+  <script src="static/staticjs/controllers/a_home.js"></script>
   <script src="static/staticjs/controllers/a_groups.js"></script>
   <script src="static/staticjs/controllers/a_drivers.js"></script>
   <script src="static/staticjs/controllers/a_admins.js"></script>
@@ -31,6 +40,13 @@
   <script src="static/staticjs/directive/password.js"></script>
   <script src="static/staticjs/directive/modalDialog.js"></script>
   <script src="static/staticjs/directive/editmodalDialog.js"></script>
+  <script src="static/staticjs/directive/widgetemployee.js"></script>
+  <script src="static/staticjs/directive/widgetadministrator.js"></script>
+  <script src="static/staticjs/directive/widgetvehicle.js"></script>
+  <script src="static/staticjs/directive/widgetgroup.js"></script>
+  <script src="static/staticjs/directive/add_miniwidgetbar.js"></script>
+  <script src="static/staticjs/directive/add_largewidgetbar.js"></script>
+  <script src="static/staticjs/service/chartService.js"></script>
   <script src="static/staticjs/service/cacheService.js"></script>
 </head>
 <body ng-app="app">
@@ -42,7 +58,7 @@
 <div  ng-controller="dashboard" id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" sidebar-directive state="true">&times;</a>
   <ul class="navigation col-xs-12">  		
-          <li class="navigation-items"> <a ng-href="#home">Home</a> 
+          <li class="navigation-items"> <a ng-href="#a_home">Home</a> 
           </li>
           <li class="navigation-items"> <a ng-href="#a_groups">Groups</a> 
           </li>

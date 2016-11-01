@@ -1,13 +1,13 @@
 //(function() {
   
-var app = angular.module('app', [ 'ngRoute' ]);
+var app = angular.module('app', [ 'ngRoute' ,'nvd3']);
 
 app.config(function($routeProvider, $locationProvider, $httpProvider) {
 
 	$routeProvider
-	.when('/home', {
-		templateUrl : 'home',
-		controller : 'dashboard'
+	.when('/a_home', {
+		templateUrl : 'a_home',
+		controller : 'a_home'
 	})
 	.when('/a_setup', {
 		templateUrl : '/a_setup',
@@ -33,7 +33,7 @@ app.config(function($routeProvider, $locationProvider, $httpProvider) {
 	}).when('/a_endactivity', {
 		templateUrl : '/a_endactivity',
 		controller : 'a_endactivity'
-	}).otherwise('/home');
+	}).otherwise('/a_home');
 	/*$locationProvider
 	.html5Mode({enabled: true,
 	      requireBase: false

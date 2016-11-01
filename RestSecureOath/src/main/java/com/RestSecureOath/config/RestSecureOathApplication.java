@@ -88,7 +88,7 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 		SpringApplication.run(sources, args);
 
 	}
-	
+	//uncomment incase conflict with jetty dependencies.
 	@Bean
 	public EmbeddedServletContainerFactory servletContainer() {
 	    return new TomcatEmbeddedServletContainerFactory();
@@ -156,12 +156,12 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 			Company comp = crepository.save(new Company());
 			comp =crepository.findOne(comp.getCompanyId());
 			//Company comper= em.merge(comp);
-			Groups dgroup = grepository.save(new Groups("Default", comp));
-			Groups ogroup = grepository.save(new Groups("Owner", comp));
+			Groups dgroup = grepository.save(new Groups("Default", comp,1));
+			Groups ogroup = grepository.save(new Groups("Owner", comp,1));
 			
 			orepository.save(new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,ogroup));
 			Company comp2 = crepository.save(new Company());
-			Groups dgroup2 = grepository.save(new Groups("Default", comp2));
+			Groups dgroup2 = grepository.save(new Groups("Default", comp2,1));
 			orepository.save(new Owner("danish", "danish", "danish", "danish", "danish", 1, comp2,dgroup2));
 			//Retirive Company from saved owner and set param 
 			Owner owner = orepository.findByUserName("owner").get();
@@ -184,10 +184,10 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 			
 			//Add vehicle to the company
 		
-			Vehicle v1=vrepository.save(new Vehicle("Toyota", "Altis", compx,dgroup,"max-1223"));
-			Vehicle v2=vrepository.save(new Vehicle("Honda" , "Civic", compx,dgroup,"lmx-1597"));
-			Vehicle v3=vrepository.save(new Vehicle("Toyota", "Altis", comp2,dgroup2,"rmx-193"));
-			Vehicle v4=vrepository.save(new Vehicle("Honda" , "Civic", comp2,dgroup2,"lov-1245"));
+			Vehicle v1=vrepository.save(new Vehicle("Toyota", "Altis", compx,dgroup,"max-1223",1));
+			Vehicle v2=vrepository.save(new Vehicle("Honda" , "Civic", compx,dgroup,"lmx-1597",1));
+			Vehicle v3=vrepository.save(new Vehicle("Toyota", "Altis", comp2,dgroup2,"rmx-193",1));
+			Vehicle v4=vrepository.save(new Vehicle("Honda" , "Civic", comp2,dgroup2,"lov-1245",1));
 			
 			//Start new activity
 			Driver driver= repository.findByUserName("driverusername1").get();

@@ -20,9 +20,14 @@
 	
 	<inherits name="com.google.gwt.logging.Logging"/>
 	
+	<inherits name='com.github.gwtd3.D3' />
+	
 	<servlet path="/check"  class="com.RestSecureOath.server.StockPriceServiceImpl"/>
 
-	 <entry-point class="com.RestSecureOath.client.Application" /> 
+	<entry-point class="com.RestSecureOath.client.Application" />
+	 
+	<!-- <set-property name="gwt.logging.logLevel" value="INFO"/>
+	<set-property name="gwt.logging.enabled" value="TRUE"/> -->
 	 
 	 
 

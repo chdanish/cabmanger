@@ -1,4 +1,4 @@
-package com.RestSecureOath.config;
+/*package com.RestSecureOath.config;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -26,7 +26,7 @@ import com.RestSecureOath.server.StockPriceServiceImpl;
 @Configuration
 public class GwtConfig {
 	
-	/*@Bean
+	@Bean
 	public FilterRegistrationBean myFilter() throws ServletException {
 		
 		FilterRegistrationBean registration = new FilterRegistrationBean(filter,new ServletRegistrationBean(new DispatcherServlet(), "/gwt/*"));
@@ -39,11 +39,11 @@ public class GwtConfig {
 	    registration.setEnabled(true);
 	   
 	    return registration;
-	}*/
+	}
 	@Autowired
 	ApplicationContext ctx;
 	
-	/*@Bean
+	@Bean
 	public ServletRegistrationBean dispatcherRegistration() {
 		DispatcherServlet dispatcherServlet = new DispatcherServlet();
 		WebApplicationContext applicationContext = new AnnotationConfigWebApplicationContext();
@@ -58,7 +58,7 @@ public class GwtConfig {
 	    registration.setLoadOnStartup(1);
 	    registration.getClass();
 	    return registration;
-	}*/
+	}
 	
 	//http://stackoverflow.com/questions/8943147/gwt-the-response-could-not-be-deserialized
 	 	
@@ -89,3 +89,4 @@ public class GwtConfig {
 			}
 		};
 }
+*/

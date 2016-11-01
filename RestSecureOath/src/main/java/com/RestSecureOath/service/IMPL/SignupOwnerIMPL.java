@@ -37,8 +37,8 @@ public class SignupOwnerIMPL implements SignupOwner{
 			return "fail";
 		}
 		Company comp = crepository.save(new Company());
-		Groups dgroup = grepository.save(new Groups("Default", comp)); //Do not delete, Default group is for All newly added users/vehicles 
-		Groups ogroup = grepository.save(new Groups("Owner", comp));   //Do not delete, Owner group is only for Company owners
+		Groups dgroup = grepository.save(new Groups("Default", comp,1)); //Do not delete, Default group is for All newly added users/vehicles 
+		Groups ogroup = grepository.save(new Groups("Owner", comp,1));   //Do not delete, Owner group is only for Company owners
 		Owner newowner = orepository.save(
 				new Owner(owner.getUserName(),
 						owner.getPassword(),

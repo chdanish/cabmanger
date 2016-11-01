@@ -24,7 +24,7 @@ public class EntityTest {
 	  throws JsonProcessingException {
 		
 		Company comp = new Company();
-		Groups dgroup = new Groups("Default", comp);
+		Groups dgroup = new Groups("Default", comp,1);
 		Owner owner = new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,dgroup);
 		Driver driver1 =new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,owner.getCompany(),dgroup);
 	    Driver driver2 =new Driver("driverusername2", "password2", "email2", "firstName", "lastName", 1,owner.getCompany(),dgroup);
@@ -44,7 +44,7 @@ public class EntityTest {
 	  throws JsonProcessingException {
 		
 		Company comp = new Company();
-		Groups dgroup = new Groups("Default", comp);
+		Groups dgroup = new Groups("Default", comp,1);
 		Owner owner = new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,dgroup);
 	    Driver driver1 =new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,owner.getCompany(),dgroup);
 	    Driver driver2 =new Driver("driverusername2", "password2", "email2", "firstName", "lastName", 1,owner.getCompany(),dgroup);
@@ -64,11 +64,11 @@ public class EntityTest {
 	  throws JsonProcessingException {
 		
 		Company comp = new Company();
-		Groups dgroup = new Groups("Default", comp);
+		Groups dgroup = new Groups("Default", comp,1);
 		Owner owner = new Owner("owner", "password", "email", "firstName", "lastName", 1, comp,dgroup);
 	    Driver driver1 =new Driver("driverusername1", "password1", "email1", "firstName", "lastName", 1,owner.getCompany(),dgroup);
-		Vehicle v1 =new Vehicle("Toyota", "Altis", comp,dgroup,"rvu-2944");
-		Vehicle v2 =new Vehicle("Honda", "Civic", comp,dgroup,"trw-8893");
+		Vehicle v1 =new Vehicle("Toyota", "Altis", comp,dgroup,"rvu-2944",1);
+		Vehicle v2 =new Vehicle("Honda", "Civic", comp,dgroup,"trw-8893",1);
 		
 		String result = new ObjectMapper().writeValueAsString(v1);
 		assertThat(result, containsString("Toyota"));

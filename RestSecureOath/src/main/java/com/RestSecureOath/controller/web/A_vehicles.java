@@ -95,7 +95,7 @@ public class A_vehicles {
 		Map<String,Object> map = new HashMap<>();
 		Company comp = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal)).get().getCompany();
 		Groups group = grepository.findByNameAndCompanyCompanyId("Default", comp.getCompanyId()).get();
-		Vehicle vehicle = new Vehicle(dto.getMake(),dto.getModelname(), comp,group,dto.getRegnumber());
+		Vehicle vehicle = new Vehicle(dto.getMake(),dto.getModelname(), comp,group,dto.getRegnumber(),1);
 		vehicle.setSubmodel(dto.getSubmodel());
 		//vehicle.setRegnumber(dto.getRegnumber());
 		vehicle.setModelyear(dto.getModelyear());

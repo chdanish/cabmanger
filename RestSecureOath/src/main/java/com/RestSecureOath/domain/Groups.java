@@ -33,6 +33,9 @@ public class Groups implements Serializable {
 	@Column(name="name",nullable=false,updatable=false)
 	private String name;
 	
+	@Column(name ="enabled")
+	private int enabled;
+	
 	@ManyToOne
 	@JoinColumn(name="companyid", nullable = false)
 	@JsonBackReference
@@ -58,10 +61,11 @@ public class Groups implements Serializable {
 	 * @param name
 	 * @param company
 	 */
-	public Groups(String name, Company company) {
+	public Groups(String name, Company company,int enabled) {
 		super();
 		this.name = name;
 		this.company = company;
+		this.enabled= enabled;
 	}
 
 	/**
