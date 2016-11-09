@@ -10,6 +10,7 @@ import javax.persistence.*;
 
 import com.RestSecureOath.util.CustomDateSerializer;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Entity
 //@Inheritance(strategy=InheritanceType.JOINED)
@@ -65,6 +66,10 @@ public class User implements Serializable {
 	@JoinColumn(name="companyid", nullable = false)
 	@JsonBackReference
 	private Company company;
+	
+	@OneToMany(mappedBy="user",orphanRemoval=true)
+	@JsonManagedReference
+	private Set<Dashboard> dashboard= new HashSet<Dashboard>(0);
 
 	public User(){
 
@@ -235,6 +240,21 @@ public class User implements Serializable {
 	 */
 	public void setGroups(Groups groups) {
 		this.groups = groups;
+	}	
+	
+
+	/**
+	 * @return the dashboard
+	 */
+	public Set<Dashboard> getDashboard() {
+		return dashboard;
+	}
+
+	/**
+	 * @param dashboard the dashboard to set
+	 */
+	public void setDashboard(Set<Dashboard> dashboard) {
+		this.dashboard = dashboard;
 	}
 
 	/* (non-Javadoc)

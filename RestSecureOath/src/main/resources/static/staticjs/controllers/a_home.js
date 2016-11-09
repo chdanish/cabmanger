@@ -1,5 +1,5 @@
 'use strict'
-app.controller('a_home', function( $scope,chartfactory,chartService) {
+app.controller('a_home', function( $scope,$http,chartfactory,chartService,cacheService,home_factory) {
 	
 	
 	 $scope.options = {
@@ -81,15 +81,55 @@ app.controller('a_home', function( $scope,chartfactory,chartService) {
 
 	$scope.countmini=0;
 	$scope.countlarge=0;
+	
+	var dashid= function(){
+		var getdash = document.getElementById('userdata').getAttribute("dashid");
+
+	}
+	
+	cacheService.update('/dashboard/getbar').then(function(data){
+ 		console.log(data);
+ 		for (var i=0;i<data.status.length;i++){
+ 			home_factory.add(data.status[i]);
+ 		}
+ 	 });
 	  
-	$scope.add_widget = function(id,type){
-  	  console.log("ID:"+id+" Type: "+type);
-    }
+	$scope.bars = home_factory.getlist();
 	
+	$scope.addbar = function(){
+		home_factory.addbar();
+		$scope.bars = home_factory.getlist();
+		}
+	$scope.deletebar = function(id){
+		console.log(id);
+		$http.delete('/dashboard/deletebar/'+id, {}).success(function(data) {
+			   console.log(data);
+			   if(data.status != null){
+				   home_factory.delete(id);
+				   $scope.bars = home_factory.getlist();
+	    	}
+			  }).error(function(data) {
+			   console.log(data);
+			  });
+		$scope.bars = home_factory.getlist();
+		}
 	
+	$scope.handleDrop = function(dropid, zoneid) {
+	    console.log('Item: ' + dropid + ' has been dropped into: ' + zoneid);
+	    home_factory.addwidgettobar(dropid,zoneid);
+	  }
 	$scope.$watch("countmini", function(newVal) {
         console.log("countmini: "+newVal);
     });
+	/*$scope.opendropdown= function(id){
+		var getbtndiv = angular.element(document.getElementById('bar'+id));
+		var str = getbtndiv[0].className.split(" ");
+		if(str.indexOf( "open")<0){
+   		 getbtndiv.addClass("open");
+   	 } else if(str.indexOf("open")>0){
+   		 getbtndiv.removeClass("open");
+   	 } 
+	}*/
 	});
 
 app.factory('home_factory', function($http,cacheService) {
@@ -100,37 +140,48 @@ app.factory('home_factory', function($http,cacheService) {
     var factory = {}; 
 
     factory.list = [];
+    
+    factory.addwidgettobar = function(type,barid) {
+    	cacheService.update('/dashboard/addwidgettobar/'+type+'_'+barid).then(function(data){
+     		console.log(data);
+     		for (var i=0;i<data.status.length;i++){
+     			factory.add(data.status[i]);
+     		}     		
+     	 });
+        }
+    
+    factory.addbar = function() {
+    	cacheService.update('/dashboard/addbar').then(function(data){
+     		console.log(data);
+     		for (var i=0;i<data.status.length;i++){
+     			factory.add(data.status[i]);
+     		}
+     	 });
+        }
 
-    factory.add = function(user) {
-    	console.log(user.userId);
-	    	if(user.snap==null){
-	    		cacheService.get("static/images/avtar.txt").then(function(data){
-	    			user.snap=data;
-	    		});
-	    	}
-    	factory.list[user.userId]=user;
+    factory.add = function(bar) {
+    	console.log(bar.dashboardbarid);
+	    	
+    	factory.list[bar.dashboardbarid]=bar;
     	//console.log(factory.list);
         }
     
     factory.getlist = function() {
             return factory.list;
         }
-    factory.updatesnap = function(id,snap) {
-    	factory.list[id].snap=snap;
-    	console.log(factory.list[id]);
-        return factory.list;
-    }
+   
     factory.delete = function(id) {
     	var newlist=[];
-    	for(var i=0;i<factory.list.length;i++){
-    		if(factory.list[i] && factory.list[i].userId!=id){
-    			newlist[factory.list[i].userId]=factory.list[i];
-    		}
-    	}
-    	delete factory.list;
-    	factory.list=newlist;
-    	console.log(factory.list);
-        return factory.list;
+				   for(var i=0;i<factory.list.length;i++){
+		        		if(factory.list[i] && factory.list[i].dashboardbarid!=id){
+		        			newlist[factory.list[i].dashboardbarid]=factory.list[i];
+		        		}
+		        	}
+		        	//delete factory.list;
+		        	factory.list=newlist;
+		        	console.log(factory.list);
+		            return factory.list;
+			       	
     }
 
     factory.getuser =function(id) {
@@ -141,23 +192,6 @@ app.factory('home_factory', function($http,cacheService) {
     return factory;
 });
 
-app.factory('chartfactory', function() {
-	  
-    var values,key,color,classed,area,strokeWidth;
 
-	function datum(values,key,color,area,classed,strokeWidth){
-		this.values=values;
-		this.key=key;
-		this.color=color;
-		this.area=area;
-		this.classed=classed;
-		this.strokeWidth=strokeWidth;
-	}
-	
-	
-	return {
-		datum:datum,
-	}
-});
 
 

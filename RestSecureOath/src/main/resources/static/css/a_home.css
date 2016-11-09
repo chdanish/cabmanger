@@ -32,7 +32,20 @@
 }
 .fixrow{
 	clear: both;
-	min-height: 100px !important;
-	background-color: #1fc985;
+	min-height: 100px;
+	margin-left: -25px;
+    margin-right: -25px;
 }
-
+.bottommargin{
+    margin-bottom: 100px;
+}
+.clearboth{
+	clear: both;
+}
+/* Drag n drop efect css */
+.drag {
+  opacity: 0.5;
+}
+.over {
+  opacity: 0.5;
+}
