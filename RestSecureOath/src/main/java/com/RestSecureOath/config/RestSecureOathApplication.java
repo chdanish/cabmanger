@@ -52,6 +52,8 @@ import com.RestSecureOath.domain.Refuel;
 import com.RestSecureOath.domain.Ride;
 import com.RestSecureOath.domain.Roles;
 import com.RestSecureOath.domain.Vehicle;
+import com.RestSecureOath.domain.Widgetdata;
+import com.RestSecureOath.domain.Widgettype;
 import com.RestSecureOath.repo.ActivityRepository;
 import com.RestSecureOath.repo.AdminRepository;
 import com.RestSecureOath.repo.CompanyRepository;
@@ -61,6 +63,7 @@ import com.RestSecureOath.repo.OwnerRepository;
 import com.RestSecureOath.repo.RefuelRepository;
 import com.RestSecureOath.repo.RideRepository;
 import com.RestSecureOath.repo.VehicleRepository;
+import com.RestSecureOath.repo.WidgetdataRepositoryX;
 import com.RestSecureOath.service.StorageService;
 import com.RestSecureOath.util.StorageProperties;
 import com.querydsl.core.types.Predicate;
@@ -133,10 +136,16 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 			RideRepository rrepository,RefuelRepository rerepository,AdminRepository adrepository
 			,ApplicationContext ctx,GroupsRepository grepository,LocalContainerEntityManagerFactoryBean entityManagerFactoryBean,
 			//LocalSessionFactoryBean sessionFactoryx,HibernateTransactionManager htransactionManager,
-			JpaContext context
-			//,JpaTransactionManager transactionManager
+			JpaContext context,WidgetdataRepositoryX widgetdataRepositoryX
 			) {
 		return (args) -> {
+			
+			widgetdataRepositoryX.save(new Widgetdata("Emplyee", "<widget-employee></widget-employee>", Widgettype.widgetEmployee));
+			widgetdataRepositoryX.save(new Widgetdata("Admintrator", "<widget-administrator></widget-administrator>", Widgettype.widgetAdministrator));
+			widgetdataRepositoryX.save(new Widgetdata("Vehicle", "<widget-vehicle></widget-vehicle>", Widgettype.widgetVehicle));
+			widgetdataRepositoryX.save(new Widgetdata("Group", "<widget-group></widget-group>", Widgettype.widgetGroup));
+			widgetdataRepositoryX.save(new Widgetdata("Chart", "<widget-minichart data=\"data\"></widget-minichart>", Widgettype.widgetMinichart));
+			
 			File file = new File("C:\\download.png");
 			byte[] bFile = new byte[(int) file.length()];
 			
@@ -196,59 +205,6 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 			repository.save(driver);
 			v1= vrepository.findOne(v1.getVehicleId());
 			v2= vrepository.findOne(v2.getVehicleId());
-			/*Vehicle vehicle = em.find(Vehicle.class, 1l);
-			Vehicle vehicle2= em.find(Vehicle.class, 2l);*/
-			//em.persist(vehicle);em.persist(vehicle2);
-			//v1.setVehicleId(null);
-			
-			//act1.setVehicle(vehicle);
-			//arepository.save(act1);
-			/*Session session = entityManager.getEntityManagerFactory().createEntityManager().unwrap(Session.class);
-			SessionFactory sessionFactory = htransactionManager.getSessionFactory();
-			  Session session = sessionFactory.openSession();
-			  session.beginTransaction();
-			  Vehicle vh= new Vehicle("mata", "Altis", comp,dgroup,"max-1223");
-			   session.save(vh);
-			   Vehicle vh2= session.get(Vehicle.class, 5l);
-			   session.saveOrUpdate(vh2);
-			  Activity actx= new Activity(driver, vh2 , 329848392l, "");
-			  session.save(new Vehiclex());
-			  Vehiclex vxx =session.get(Vehiclex.class,1l);
-			  actx.setVehiclex(vxx);
-			  vxx.setActivity(actx);
-			  session.save(actx);
-			  if(!v1.isNew()){
-					System.out.println("PASS");
-					v1=em.merge(v1);
-					em.merge(new Activity(driver2, vehicle, 56448392l, ""));
-					//RepositoryFactorySupport factory = new GenericRepositoryFactory(context.getEntityManagerByManagedType(Activity.class));
-					//ActivityRepository rep = factory.getRepository(ActivityRepository.class);
-					entityManager.getEntityManagerFactory().createEntityManager().merge(v1);
-					Activity act1= new Activity(driver, vh2 , 329848392l, "");
-					
-					//act1.setVehicle(v1);act2.setVehicle(v2);
-					session.save(new Vehiclex());
-					  Vehiclex vmm =session.get(Vehiclex.class,1l);
-					  act1.setVehiclex(vmm);
-					//act2.setVehiclex(vxx);
-					session.save(act1);
-					//session.save(null);
-					Vehiclex vdd =session.get(Vehiclex.class,1l);
-					//session.save(new Vehiclex());
-					Activity act2= new Activity(driver, vh2 , 32948392l, "");
-					session.merge(vdd);
-					vdd.setActivity(act2);
-					session.merge(vdd);
-					act2.setVehiclex(vdd);
-					session.merge(vdd);
-					session.persist(vdd);
-					session.merge(vdd);
-					session.save(act2);
-					arepository.save(new Activity(driver2, v1, 56448392l, ""));
-					arepository.save(new Activity(driver2, v1, 56448392l, ""));
-				} else System.out.println(v1.isNew());
-			  session.getTransaction().commit();
-			  session.close();*/
 			Activity act1= new Activity(driver, v2 , 329848392l, "");
 			Activity act2= new Activity(driver, v2 , 329848392l, "");
 			Set<Activity> actset= new HashSet<Activity>(0);
@@ -280,6 +236,19 @@ public class RestSecureOathApplication extends GlobalMethodSecurityConfiguration
 			
 		};
 	}
+	
+	/*@Bean
+	@Order(-100)
+	public CommandLineRunner savewidgets(DriverRepository repository,CompanyRepository crepository,
+			OwnerRepository orepository,VehicleRepository vrepository,ActivityRepository arepository,
+			RideRepository rrepository,RefuelRepository rerepository,AdminRepository adrepository
+			,ApplicationContext ctx,GroupsRepository grepository,LocalContainerEntityManagerFactoryBean entityManagerFactoryBean,
+			JpaContext context,WidgetdataRepositoryX widgetdataRepositoryX
+			) {
+		return (args) -> {
+			
+		};
+	}*/
 	
 	//http://blogs.sourceallies.com/2012/02/hibernate-date-vs-timestamp/
 	

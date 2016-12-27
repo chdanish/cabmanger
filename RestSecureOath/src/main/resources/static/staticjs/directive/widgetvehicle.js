@@ -1,15 +1,15 @@
 'use strict'
 app.directive('widgetVehicle',['$compile','$timeout','cacheService', function($compile,$timeout,cacheService) {
 	
-	var vehicle = '<div class="container col-xs-2 seperation">'+
+	var vehicle = /*'<div class="container col-xs-2 seperation">'+
     '<div class="row borderwigx roundc">'+
     '<div class="panel panel-default  roundc">'+
         '<div class="panel-heading  roundc">'+
              '<h4>'+
         '{{widgettitle}}'+
       '</h4>'+
-        '</div>'+
-        '<table class="table table-fixed col-xs-2 ">'+
+        '</div>'+*/
+        '<table class="table table-fixed col-xs-2 topmagin">'+
             '<thead >'+
                 '<!-- <tr>'+
                     '<th class="col-xs-1">Employees</th>'+
@@ -30,10 +30,10 @@ app.directive('widgetVehicle',['$compile','$timeout','cacheService', function($c
                     '<td class="col-xs-1">{{blocked}}</td>'+
                 '</tr> '+                   
             '</tbody>'+
-        '</table>'+
+        '</table>'/*+
     '</div>'+
 '</div>'+
-'</div>' ;
+'</div>'*/ ;
 	
   return {
 	  /*require: "ngModel",*/

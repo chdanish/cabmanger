@@ -1,6 +1,6 @@
 //(function() {
   
-var app = angular.module('app', [ 'ngRoute' ,'nvd3']);
+var app = angular.module('app', [ 'ngRoute' ,'nvd3','gridster']);
 
 app.config(function($routeProvider, $locationProvider, $httpProvider) {
 

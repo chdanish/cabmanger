@@ -1,7 +1,7 @@
 'use strict'
 app.directive('widgetEmployee',['$compile','$timeout','cacheService', function($compile,$timeout,cacheService) {
 	
-	var employees = '<div class="container col-xs-2 seperation">'+
+	var employees = /*'<div class="container col-xs-2 seperation">'+
     '<div class="row borderwigx roundc">'+
     '<div class="panel panel-default  roundc">'+
         '<div class="panel-heading  roundc">'+
@@ -9,8 +9,8 @@ app.directive('widgetEmployee',['$compile','$timeout','cacheService', function($
         '{{widgettitle}}'+
       '</h4>'+
 
-        '</div>'+
-        '<table class="table table-fixed col-xs-2 ">'+
+        '</div>'+*/
+        '<table class="table table-fixed col-xs-2 topmagin ">'+
             '<thead >'+
                 '<!-- <tr>'+
                     '<th class="col-xs-1">Employees</th>'+
@@ -31,10 +31,10 @@ app.directive('widgetEmployee',['$compile','$timeout','cacheService', function($
                     '<td class="col-xs-1">{{blocked}}</td>'+
                 '</tr> '+                   
             '</tbody>'+
-        '</table>'+
-    '</div>'+
+        '</table>'
+   /* +'</div>'+
 '</div>'+
-'</div>' ;
+'</div>'*/ ;
 	
   return {
 	  /*require: "ngModel",*/

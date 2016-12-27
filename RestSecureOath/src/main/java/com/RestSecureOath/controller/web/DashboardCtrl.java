@@ -1,7 +1,10 @@
 package com.RestSecureOath.controller.web;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -14,22 +17,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.RestSecureOath.domain.Dashboard;
-import com.RestSecureOath.domain.Dashboard_bar;
 import com.RestSecureOath.domain.QDashboard;
-import com.RestSecureOath.domain.QDashboard_bar;
-import com.RestSecureOath.domain.QWidget;
 import com.RestSecureOath.domain.User;
-import com.RestSecureOath.domain.Widget;
+import com.RestSecureOath.domain.Widgetdata;
+import com.RestSecureOath.domain.Widgets;
 import com.RestSecureOath.domain.Widgettype;
 import com.RestSecureOath.repo.DashboardRepositoryX;
-import com.RestSecureOath.repo.Dashboard_barRepositoryX;
 import com.RestSecureOath.repo.UserRepositoryX;
-import com.RestSecureOath.repo.WidgetRepositoryX;
+import com.RestSecureOath.repo.WidgetdataRepositoryX;
+import com.RestSecureOath.repo.WidgetsRepositoryX;
 import com.RestSecureOath.util.SecurityUtils;
 import com.querydsl.jpa.impl.JPAQuery;
 
@@ -40,12 +43,12 @@ public class DashboardCtrl {
 	private final DashboardRepositoryX dashboardRepository;
 	
 	private final UserRepositoryX userRepository;
-	
-	private final Dashboard_barRepositoryX dashboard_barRepositoryX;
-	
-	private final WidgetRepositoryX widgetRepositoryX;
 
 	private EntityManager entityManager;
+	
+	private final WidgetsRepositoryX widgetsRepositoryX;
+	
+	private final WidgetdataRepositoryX widgetdataRepositoryX;
 	
 	
 	@PersistenceContext(type=PersistenceContextType.TRANSACTION)
@@ -59,101 +62,93 @@ public class DashboardCtrl {
 	 * @param dashboard_barRepositoryX
 	 */
 	@Autowired
-	public DashboardCtrl(DashboardRepositoryX dashboardRepository, UserRepositoryX userRepository,
-			Dashboard_barRepositoryX dashboard_barRepositoryX,WidgetRepositoryX widgetRepositoryX) {
+	public DashboardCtrl(DashboardRepositoryX dashboardRepository, UserRepositoryX userRepository
+			,WidgetsRepositoryX widgetsRepositoryX,WidgetdataRepositoryX widgetdataRepositoryX) {
 		super();
 		this.dashboardRepository = dashboardRepository;
 		this.userRepository = userRepository;
-		this.dashboard_barRepositoryX = dashboard_barRepositoryX;
-		this.widgetRepositoryX  =  widgetRepositoryX;
+		this.widgetsRepositoryX = widgetsRepositoryX;
+		this.widgetdataRepositoryX= widgetdataRepositoryX;
 	}
 	
-	@RequestMapping(value = "/dashboard/addbar", method = RequestMethod.GET)
-	public Map<String,Object> addbar(Principal principal){
-		Map<String,Object> map = new HashMap<>();
-		Optional<User> userm = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal));
-		QDashboard_bar bar = QDashboard_bar.dashboard_bar;
-		long x = 1;
-		QDashboard dash = QDashboard.dashboard;
-		final JPAQuery<Dashboard_bar> query = new JPAQuery<>(entityManager);
-		if(userm.isPresent()&&!userm.get().getDashboard().isEmpty()){
-			Long maxorder = query.from(bar).select(bar.bar_order.max())
+	/*Long maxorder = query.from(bar).select(bar.barorder.max())
 			.where(bar.dashboard.dashboardid.eq(userm.get().getCompany().getCompanyId())).fetchFirst();
-			 maxorder = maxorder!=null ? maxorder : null ;
-			if(maxorder ==null){
-				dashboard_barRepositoryX.save(new Dashboard_bar(1l,userm.get().getDashboard()
-						.stream().filter(e -> e!=null).findFirst().get() ));
-			}else dashboard_barRepositoryX.save(new Dashboard_bar(maxorder+1,userm.get().getDashboard()
-							.stream().filter(e -> e!=null).findFirst().get() ));
-		}
-		map.put("status", dashboard_barRepositoryX.findByDashboardDashboardid(userm.get().getDashboard()
-				.stream().filter(e -> e!=null).findFirst().get().getDashboardid()));
-		return map;			
-	}
-	
-	@RequestMapping(value = "/dashboard/addwidgettobar/{data}", method = RequestMethod.GET)
-	public Map<String,Object> addwidgettobar(Principal principal,@PathVariable String data){
-		String[] str = data.split("_");
-		Map<String,Object> map = new HashMap<>();
-		final JPAQuery<Dashboard_bar> query = new JPAQuery<>(entityManager);
-		Optional<User> userm = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal));
-		QWidget widget = QWidget.widget;		
-		Long maxorder = query.from(widget).select(widget.widget_order.max())
-				.where(widget.dashboard_bar.dashboard.dashboardid.eq(userm.get().getCompany().getCompanyId())
-						.and(widget.dashboard_bar.dashboardbarid.eq(Long.valueOf(str[1])))).fetchFirst();
-		
-		
-		for(int i = 0;i< Widgettype.values().length;i++){
-			if(str[0].equals(Widgettype.values()[i].toString())){
-				Dashboard_bar bar  = dashboard_barRepositoryX.findOne(Long.valueOf(str[1]));
-				Set<Widget> widgs = bar.getWidget();
-				if(widgs.isEmpty()) {
-					widgs.add(new Widget(1l, bar, Widgettype.values()[i]));
-				} else if(!widgs.isEmpty() && maxorder!=null){
-					widgs.add(new Widget(maxorder+1, bar, Widgettype.values()[i]));
-				}
-				bar.setWidget(widgs);
-				dashboard_barRepositoryX.save(bar);
-			}
-		}		
-		map.put("status", dashboard_barRepositoryX.findByDashboardDashboardid(userm.get().getDashboard()
-				.stream().filter(e -> e!=null).findFirst().get().getDashboardid()));
-		return map;			
-	}
-	
-	@RequestMapping(value = "/dashboard/deletebar/{id}", method = RequestMethod.DELETE)
-	public Map<String,Object> deletebar(Principal principal,@PathVariable long id){
-		Map<String,Object> map = new HashMap<>();
-		Optional<User> userm = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal));
-		if(dashboard_barRepositoryX.exists(id)){
-			dashboard_barRepositoryX.delete(id);
-			map.put("status","done");
-	        return map;
-		};		
-        map.put("status","fail");
-        return map;			
-	}
-	
-	@RequestMapping(value = "/dashboard/getbar", method = RequestMethod.GET)
-	public Map<String,Object> getbar(Principal principal){
-		Optional<User> userm = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal));
-		Map<String,Object> map = new HashMap<>();
-		map.put("status", dashboard_barRepositoryX.findByDashboardDashboardid(userm.get().getDashboard()
-						.stream().filter(e -> e!=null).findFirst().get().getDashboardid()));
-		return map;		
-	}
+			 maxorder = maxorder!=null ? maxorder : null ;*/
 	
 	
 
-	@RequestMapping(value = "/dashboard/addwidget", method = RequestMethod.POST)
-	public Map<String,Object> getView(Principal principal){
+	@RequestMapping(value = "/dashboard/addwidget/{type}", method = RequestMethod.POST)
+	public Map<String,Object> getView(Principal principal,@PathVariable String type ){
 		Optional<User> userm = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal));
-		//userm.getDashboard().isEmpty()
+		Map<String,Object> map = new HashMap<>();
+		Dashboard dashboard  =dashboardRepository.findOne(userm.get().getDashboard().stream().findFirst().get().getDashboardid());
+		Set<Widgets> widgets= dashboard.getWidgets();
+		for(Widgettype wid : Widgettype.values()){
+			if(type.equals(wid.toString())){
+				Widgetdata widdata= widgetdataRepositoryX.findByType(wid);
+				widgets.add(new Widgets(0l, 0l, 1l, 2l, widdata.getName(),widdata.getTag(), false, wid, dashboard));
+			}
+		}
+		dashboard.setWidgets(widgets);
+		Dashboard dashboard2 = dashboardRepository.save(dashboard);
+		map.put("status",dashboardRepository.save(dashboard));
+		return map;		
+	}
+	
+	@RequestMapping(value = "/dashboard/deletewidget/{id}", method = RequestMethod.POST)
+	public Map<String,Object> deletewidget(Principal principal,@PathVariable Long id ){
+		Optional<User> userm = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal));
+		Map<String,Object> map = new HashMap<>();
+		widgetsRepositoryX.delete(id);
+		map.put("status",dashboardRepository.findOne(userm.get().getDashboard().stream().findFirst().get().getDashboardid()));
+		return map;		
+	}
+	
+	@RequestMapping(value = "/dashboard/getdash", method = RequestMethod.GET)
+	public Map<String,Object> getdash(Principal principal){
+		Optional<User> userm = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal));
+		Map<String,Object> map = new HashMap<>();
 		if(userm.isPresent() && !dashboardRepository.findByNameAndUserUserId("Default", userm.get().getUserId()).isPresent()){
 			Dashboard dashboard  = new Dashboard(userm.get(),"Default");
 			Dashboard dashboard2 = dashboardRepository.save(dashboard);
 		}
-		return null;		
+		map.put("status",dashboardRepository.findOne( userm.get().getDashboard()
+				.stream().filter(e -> e!=null).findFirst().get().getDashboardid()));
+		return map;		
+	}
+	
+	@RequestMapping(value = "/dashboard/moves", method = RequestMethod.POST)
+	public Map<String,Object> moves(Principal principal,@RequestBody ArrayList<Map<String,Object>> maps){
+		Optional<User> userm = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal));
+		maps.parallelStream().filter(e ->{return e !=null;})
+		.forEach(mapr ->{
+			Widgets wid = widgetsRepositoryX.findOne(Long.valueOf(mapr.get("widgetsid").toString()));		
+			wid.setCol(Long.valueOf(mapr.get("col").toString()));
+			wid.setRow(Long.valueOf(mapr.get("row").toString()));
+			wid.setSizeX(Long.valueOf(mapr.get("sizeX").toString()));
+			wid.setSizeY(Long.valueOf(mapr.get("sizeY").toString()));
+			widgetsRepositoryX.save(wid);
+		});
+		
+		Map<String,Object> map = new HashMap<>();
+		map.put("status",dashboardRepository.findOne( userm.get().getDashboard()
+				.stream().filter(e -> e!=null).findFirst().get().getDashboardid()));
+		return map;		
+	}
+	
+	@RequestMapping(value = "/dashboard/move", method = RequestMethod.POST)
+	public Map<String,Object> move(Principal principal,@RequestBody Map<String,String> mapr){
+		Optional<User> userm = userRepository.findByUserName(SecurityUtils.getLoggedInUserName(principal));
+		Widgets wid = widgetsRepositoryX.findOne(Long.valueOf(mapr.get("widgetsid").toString()));
+		Map<String,Object> map = new HashMap<>();		
+		wid.setCol(Long.valueOf(mapr.get("col").toString()));
+		wid.setRow(Long.valueOf(mapr.get("row").toString()));
+		wid.setSizeX(Long.valueOf(mapr.get("sizeX").toString()));
+		wid.setSizeY(Long.valueOf(mapr.get("sizeY").toString()));
+		widgetsRepositoryX.save(wid);
+		map.put("status",dashboardRepository.findOne( userm.get().getDashboard()
+				.stream().filter(e -> e!=null).findFirst().get().getDashboardid()));
+		return map;		
 	}
 	
 	@Controller
@@ -164,10 +159,21 @@ public class DashboardCtrl {
 			//userm.getDashboard().isEmpty()
 			if(userm.isPresent() && !dashboardRepository.findByNameAndUserUserId("Default", userm.get().getUserId()).isPresent()){
 				Dashboard dashboard  = new Dashboard(userm.get(),"Default");
+				Set<Widgets> widgets= new HashSet<Widgets>(0);
+				Widgetdata emp,admin,vehicle,group;
+				emp= widgetdataRepositoryX.findByType(Widgettype.widgetEmployee);
+				admin=widgetdataRepositoryX.findByType(Widgettype.widgetAdministrator);
+				vehicle=widgetdataRepositoryX.findByType(Widgettype.widgetVehicle);
+				group=widgetdataRepositoryX.findByType(Widgettype.widgetGroup);
+				widgets.add(new Widgets(0l, 0l, 1l, 2l, emp.getName(),emp.getTag(), false, emp.getType(), dashboard));
+				widgets.add(new Widgets(2l, 0l, 1l, 2l, admin.getName(),admin.getTag(), false, admin.getType(), dashboard));
+				widgets.add(new Widgets(4l, 0l, 1l, 2l, vehicle.getName(),vehicle.getTag(), false, vehicle.getType(), dashboard));
+				widgets.add(new Widgets(6l, 0l, 1l, 2l, group.getName(),group.getTag(), false, group.getType(), dashboard));
+				dashboard.setWidgets(widgets);
 				Dashboard dashboard2 = dashboardRepository.save(dashboard);
-				/*dashboard_barRepositoryX.save(new Dashboard_bar(1l, dashboard2));
-				dashboard_barRepositoryX.save(new Dashboard_bar(2l, dashboard2));
-				dashboard_barRepositoryX.save(new Dashboard_bar(3l, dashboard2));*/
+				
+				
+				
 				model.addAttribute("dashboardid", Long.toString(dashboard2.getDashboardid()));
 			}else{
 				model.addAttribute("dashboardid", Long.toString(userm.get().getDashboard()

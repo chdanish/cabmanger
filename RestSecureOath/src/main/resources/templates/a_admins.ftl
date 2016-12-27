@@ -6,6 +6,9 @@
 <link rel="stylesheet" href="https://getbootstrap.com/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" href="static/css/modal.css"/>
 <style type="text/css">
+.row{
+	 margin-left: 2px; 
+}
 
 hr.style3 {
 	border-top: 1px dashed #8c8b8b;
@@ -33,7 +36,7 @@ min-width: 30% !important;
 </head>
 <!-- <body>
 <div class="container col-xs-12 col-md-12 col-lg-12" style="border:solid #ff0000 1px; ">
- -->	<div class="row band col-xs-11" >
+ -->	<div class="row band col-xs-12" >
 	<div class="row " >
 	<button ng-click="toggleModal()" class="btn col-xs-2">Add Administrator</button>
 	</div>

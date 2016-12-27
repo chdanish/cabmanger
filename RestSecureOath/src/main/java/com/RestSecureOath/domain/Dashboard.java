@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,9 +45,8 @@ public class Dashboard {
 	@JsonBackReference
 	private User user;
 	
-	@OneToMany(mappedBy="dashboard",orphanRemoval=true)
-	@JsonManagedReference
-	private Set<Dashboard_bar> dashboard_bar= new HashSet<Dashboard_bar>(0);
+	@OneToMany(mappedBy="dashboard",orphanRemoval=true,cascade=CascadeType.ALL)
+	private Set<Widgets> widgets= new HashSet<Widgets>(0);
 	
 
 	/**
@@ -118,18 +118,34 @@ public class Dashboard {
 
 
 	/**
-	 * @return the dashboard_bar
+	 * @return the createdAT
 	 */
-	public Set<Dashboard_bar> getDashboard_bar() {
-		return dashboard_bar;
+	public Date getCreatedAT() {
+		return createdAT;
 	}
 
 
 	/**
-	 * @param dashboard_bar the dashboard_bar to set
+	 * @param createdAT the createdAT to set
 	 */
-	public void setDashboard_bar(Set<Dashboard_bar> dashboard_bar) {
-		this.dashboard_bar = dashboard_bar;
+	public void setCreatedAT(Date createdAT) {
+		this.createdAT = createdAT;
+	}
+
+
+	/**
+	 * @return the widgets
+	 */
+	public Set<Widgets> getWidgets() {
+		return widgets;
+	}
+
+
+	/**
+	 * @param widgets the widgets to set
+	 */
+	public void setWidgets(Set<Widgets> widgets) {
+		this.widgets = widgets;
 	}
 
 

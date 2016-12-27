@@ -10,12 +10,10 @@
 
 </style>
 
-<script
+<!-- <script
   src="https://code.jquery.com/jquery-2.2.4.min.js"
   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-  crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
+  crossorigin="anonymous"></script> -->
   <!-- <script data-require="angular.js@1.3.5" data-semver="1.3.5" src="https://code.angularjs.org/1.3.5/angular.js"></script>
    --><script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-route.js"></script>
@@ -25,6 +23,13 @@
   <!-- <script src="https://rawgit.com/marmotz/angular-drag-and-drop-lists/master/angular-drag-and-drop-lists.js" type="text/javascript"></script> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.4/nv.d3.css" />
   
+   <!-- <link rel="stylesheet" href="https://raw.githack.com/ManifestWebDesign/angular-gridster/v0.13.5/dist/angular-gridster.min.css"/> -->
+   <!-- <link rel="stylesheet" href="http://rawgit.com/ManifestWebDesign/angular-gridster/v0.13.5/dist/angular-gridster.min.css"/> -->
+
+   <script src="https://raw.githack.com/ManifestWebDesign/angular-gridster/v0.13.5/dist/angular-gridster.min.js"></script>
+    <!-- http://embed.plnkr.co/jEQMch/ -->
+  
+  <link rel="stylesheet" href="static/css/external/gridster/angular-gridster.min.css" />
   <link rel="stylesheet" href="static/css/style.css" />
   <link rel="stylesheet" href="static/css/sidebar.css" />
   <link rel="stylesheet" href="static/css/navbar.css" />
@@ -46,7 +51,9 @@
   <script src="static/staticjs/directive/password.js"></script>
   <script src="static/staticjs/directive/modalDialog.js"></script>
   <script src="static/staticjs/directive/editmodalDialog.js"></script>
+  <script src="static/staticjs/directive/resizedetector.js"></script>
   <script src="static/staticjs/directive/displaywidget.js"></script>
+  <script src="static/staticjs/directive/widgetminichart.js"></script>
   <script src="static/staticjs/directive/widgetemployee.js"></script>
   <script src="static/staticjs/directive/widgetadministrator.js"></script>
   <script src="static/staticjs/directive/widgetvehicle.js"></script>
@@ -54,6 +61,7 @@
   <script src="static/staticjs/directive/add_miniwidgetbar.js"></script>
   <script src="static/staticjs/directive/add_largewidgetbar.js"></script>
   <script src="static/staticjs/service/chartService.js"></script>
+  <script src="static/staticjs/service/dataservice.js"></script>
   <script src="static/staticjs/service/cacheService.js"></script>
   <script src="static/staticjs/factory/chartfactory.js"></script>
 </head>

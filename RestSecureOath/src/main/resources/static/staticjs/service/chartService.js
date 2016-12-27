@@ -2,11 +2,13 @@
 app.service('chartService',function() {
 	
 	var options = {
-            chart: {
+			chart: {
                 type: 'lineChart',
-                height: 450,
+                //height:'',
+                updatewidth:function(w){this.width=w;},
+                updateheight:function(h){this.height=h;},
                 margin : {
-                    top: 20,
+                    top: 40,
                     right: 20,
                     bottom: 40,
                     left: 55
@@ -14,14 +16,9 @@ app.service('chartService',function() {
                 x: function(d){ return d.x; },
                 y: function(d){ return d.y; },
                 useInteractiveGuideline: true,
-                dispatch: {
-                    stateChange: function(e){ console.log("stateChange"); },
-                    changeState: function(e){ console.log("changeState"); },
-                    tooltipShow: function(e){ console.log("tooltipShow"); },
-                    tooltipHide: function(e){ console.log("tooltipHide"); }
-                },
                 xAxis: {
-                    axisLabel: 'Time (ms)'
+                    axisLabel: 'Time (ms)',
+                    axisLabelDistance: -5
                 },
                 yAxis: {
                     axisLabel: 'Voltage (v)',
@@ -29,30 +26,8 @@ app.service('chartService',function() {
                         return d3.format('.02f')(d);
                     },
                     axisLabelDistance: -10
-                },
-                callback: function(chart){
-                    console.log("!!! lineChart callback !!!");
-                }
-            },
-            title: {
-                enable: true,
-                text: 'Title for Line Chart'
-            },
-            subtitle: {
-                enable: true,
-                text: 'Subtitle for simple line chart.  urbanitas.',
-                css: {
-                    'text-align': 'center',
-                    'margin': '10px 13px 0px 7px'
-                }
-            },
-            caption: {
-                enable: true,
-                html: '<b>Figure 1.</b> Lorem ipsum dolor sit amet, at eam blandit ',
-                css: {
-                    'text-align': 'justify',
-                    'margin': '10px 13px 0px 7px'
-                }
+                }, 
+                showLegend: false
             }
         };
 	
@@ -65,9 +40,20 @@ app.service('chartService',function() {
 	 var addtochart = function(data){
 		 chartService.push(data);
 	 }
+	 
+	/* var api = {};
+	 var update = function(height,width){
+		// console.log("Height: "+height+"width: "+width);
+		 height= parseInt(height)-120;
+		 width= parseInt(width)-10;
+		 options.chart.height= parseInt(height);
+		 options.chart.width= parseInt(width);
+	 }*/
 	  
 	  return {
-		  getoptions:options,
+		  options:options,
+		  /*api :	api,
+		  update:update,*/
 		  getchart  :getchart,
 		  addtochart:addtochart,
 	  };

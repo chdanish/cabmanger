@@ -1,10 +1,16 @@
+body {
+     font-size: 12px;
+ } 
+
 .row{
-	margin-left: -30px;
+	 margin-left: 2px; 
 }
 
 .band{
-	width: 95%;
+	width: 100%;
 }
+
+
 
 .material-icons.md-68 { font-size: 68px; }
 .material-icons.md-68.md-dark.md-inactive {
@@ -49,3 +55,141 @@
 .over {
   opacity: 0.5;
 }
+
+
+
+.dropdown:hover>.dropdown-menu {
+    display: block;
+    margin-top: -6px;
+}
+
+
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.caret.pull-left {
+    float: left !important;
+    margin-top:10px;
+    margin-right:3px;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    right: 100%;
+    margin-top: -25px;
+    margin-right: -5px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+}
+
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-right {
+    float: right !important;
+}
+
+.dropdown-submenu.pull-right>.dropdown-menu {
+}
+
+
+
+ul {
+    list-style: none;
+}
+.box {
+    height: 100%;
+    /* border: 1px solid #ccc; */
+    background-color: #eee6f2;
+}
+.box-header {
+    height: 30px;
+    background-color: #eee;
+    /* padding: 0 30px 0 10px; */
+    border-bottom: 1px solid #ccc;
+    cursor: move;
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+}
+.box-header h3 {
+    width: 100%;
+    margin: 5px;
+    display: inline-block;
+}
+.box-content {
+    /*height: 100%;*/
+    padding: 0px;
+}
+.box-header-btns {
+    top: 15px;
+    right: 10px;
+    cursor: pointer;
+    position: absolute;
+}
+a {
+    color: #ccc;
+}
+form {
+    margin-bottom: 0;
+}
+.gridster {
+    border: 1px solid #ccc;
+}
+.gridster-item {
+    border: 1px solid #ccc;
+}
+
+.topmagin{
+	margin-top: 30px;
+}
+.dropdown-toggle.ddowncolor{
+	color: #757575;
+}
+
+button.close.boxclose {
+	display:block;
+    margin-top: -30px;
+	margin-right: 5px;
+	z-index: 999999;
+}
+
+button.close.boxclose:hover {
+    font-weight:bold;
+    font-size: 2.5em;
+}
+
+.testdiv{
+	width: 100%;
+	height: 100%;
+	background: red;
+}
+
+.fullsize{
+	width: 100%;
+	height: 100%;
+}
+.fullsize.chart{
+	width: 100%;
+	height: 75%;
+}
+.navbar {
+    padding-top: 20px;
+    max-height: 50px;
+}
+
+li.dropdown:hover > .dropdown-menu{
+  display:block;
+  left:30%;
+  margin-top: -1%;
+}
+

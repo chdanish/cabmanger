@@ -1,64 +1,10 @@
 'use strict'
-app.controller('a_home', function( $scope,$http,chartfactory,chartService,cacheService,home_factory) {
+app.controller('a_home', function( $scope,$window, $timeout,$http,chartfactory,
+		chartService,cacheService,home_factory,DataService) {
 	
+	$scope.oldlist,$scope.newlist;
 	
-	 $scope.options = {
-	            chart: {
-	                type: 'lineChart',
-	                height: 450,
-	                margin : {
-	                    top: 20,
-	                    right: 20,
-	                    bottom: 40,
-	                    left: 55
-	                },
-	                x: function(d){ return d.x; },
-	                y: function(d){ return d.y; },
-	                useInteractiveGuideline: true,
-	                dispatch: {
-	                    stateChange: function(e){ console.log("stateChange"); },
-	                    changeState: function(e){ console.log("changeState"); },
-	                    tooltipShow: function(e){ console.log("tooltipShow"); },
-	                    tooltipHide: function(e){ console.log("tooltipHide"); }
-	                },
-	                xAxis: {
-	                    axisLabel: 'Time (ms)'
-	                },
-	                yAxis: {
-	                    axisLabel: 'Voltage (v)',
-	                    tickFormat: function(d){
-	                        return d3.format('.02f')(d);
-	                    },
-	                    axisLabelDistance: -10
-	                },
-	                callback: function(chart){
-	                    console.log("!!! lineChart callback !!!");
-	                }
-	            },
-	            title: {
-	                enable: true,
-	                text: 'Title for Line Chart'
-	            },
-	            subtitle: {
-	                enable: true,
-	                text: 'Subtitle for simple line chart. Lorem ipsum dolor sit amet, at eam blandit sadipscing, vim adhuc sanctus disputando ex, cu usu affert alienum urbanitas.',
-	                css: {
-	                    'text-align': 'center',
-	                    'margin': '10px 13px 0px 7px'
-	                }
-	            },
-	            caption: {
-	                enable: true,
-	                html: '<b>Figure 1.</b> Lorem ipsum dolor sit amet, at eam blandit sadipscing, <span style="text-decoration: underline;">vim adhuc sanctus disputando ex</span>, cu usu affert alienum urbanitas. <i>Cum in purto erat, mea ne nominavi persecuti reformidans.</i> Docendi blandit abhorreant ea has, minim tantas alterum pro eu. <span style="color: darkred;">Exerci graeci ad vix, elit tacimates ea duo</span>. Id mel eruditi fuisset. Stet vidit patrioque in pro, eum ex veri verterem abhorreant, id unum oportere intellegam nec<sup>[1, <a href="https://github.com/krispo/angular-nvd3" target="_blank">2</a>, 3]</sup>.',
-	                css: {
-	                    'text-align': 'justify',
-	                    'margin': '10px 13px 0px 7px'
-	                }
-	            }
-	        };
-	 sinAndCos();
-	        $scope.datam = chartService.getchart;
-
+	 		sinAndCos();
 	        /*Random Data Generator */
 	        function sinAndCos() {
 	        	var chartdata=[];
@@ -87,52 +33,92 @@ app.controller('a_home', function( $scope,$http,chartfactory,chartService,cacheS
 
 	}
 	
-	cacheService.update('/dashboard/getbar').then(function(data){
- 		console.log(data);
- 		for (var i=0;i<data.status.length;i++){
- 			home_factory.add(data.status[i]);
- 		}
- 	 });
-	  
-	$scope.bars = home_factory.getlist();
 	
-	$scope.addbar = function(){
-		home_factory.addbar();
-		$scope.bars = home_factory.getlist();
-		}
-	$scope.deletebar = function(id){
-		console.log(id);
-		$http.delete('/dashboard/deletebar/'+id, {}).success(function(data) {
-			   console.log(data);
-			   if(data.status != null){
-				   home_factory.delete(id);
-				   $scope.bars = home_factory.getlist();
-	    	}
-			  }).error(function(data) {
-			   console.log(data);
-			  });
-		$scope.bars = home_factory.getlist();
-		}
 	
-	$scope.handleDrop = function(dropid, zoneid) {
-	    console.log('Item: ' + dropid + ' has been dropped into: ' + zoneid);
-	    home_factory.addwidgettobar(dropid,zoneid);
+	  $scope.gridsterOptions = {
+		    rowHeight: '130',
+			margins: [5, 5],
+			columns: 8,
+			mobileModeEnabled: false,
+			resizable: {
+		     enabled: true,
+		     handles: ['n', 'e', 's', 'w', 'ne', 'se', 'sw', 'nw'],
+		     
+		     // optional callback fired when resize is started
+		     start: function(event, $element, widget) {
+		    	 $scope.oldlist = angular.copy($scope.dashboard.widgets);
+		     },
+		     
+		     // optional callback fired when item is resized,
+		     resize: function(event, $element, widget) {
+		    	// if (widget.chart.api) widget.chart.api.update();
+		     }, 
+		    
+		      // optional callback fired when item is finished resizing 
+		     stop: function(event, $element, widget) {
+		    	 $scope.gridsterOptions.resizable.enabled =false;
+		    	 home_factory.onchange($scope.dashboard.widgets,$scope.oldlist)
+		    	 	.then(function(data){
+		    	 		$scope.dashboard.widgets= data;
+		    	 		$scope.gridsterOptions.resizable.enabled =true;
+		    	 		},
+						function(error){
+						  $scope.dashboard.widgets=$scope.oldlist;
+						  $scope.gridsterOptions.resizable.enabled =true;
+					});
+		     } 
+		    },
+		    draggable: {
+		        enabled: true, // whether dragging items is supported
+		        handle: 'h3', // optional selector for drag handle
+		        start: function(event, $element, widget) {
+		        	$scope.oldlist = angular.copy($scope.dashboard.widgets);
+		        }, // optional callback fired when drag is started,
+		        drag: function(event, $element, widget) {}, // optional callback fired when item is moved,
+		        stop: function(event, $element, widget) {
+			    	 $scope.gridsterOptions.draggable.enabled =false;
+			    	 home_factory.onchange($scope.dashboard.widgets,$scope.oldlist)
+			    	 	.then(function(data){
+			    	 		$scope.dashboard.widgets= data;
+			    	 		$scope.gridsterOptions.draggable.enabled =true;
+			    	 		},
+							function(error){
+							  $scope.dashboard.widgets=$scope.oldlist;
+							  $scope.gridsterOptions.draggable.enabled =true;
+						});
+			     } // optional callback fired when item is finished dragging
+		     },
+			};
+	  $scope.dashboard={
+			  widgets:null, 
+	  }	;
+	  home_factory.getlist().then(function(data){
+		  $scope.dashboard.widgets= data;
+	  });
+		  
+	  $scope.addwidget= function(type){
+		  home_factory.addwidget(type).then(function(data){
+			  $scope.dashboard.widgets= data;
+		  });
 	  }
-	$scope.$watch("countmini", function(newVal) {
-        console.log("countmini: "+newVal);
-    });
-	/*$scope.opendropdown= function(id){
-		var getbtndiv = angular.element(document.getElementById('bar'+id));
-		var str = getbtndiv[0].className.split(" ");
-		if(str.indexOf( "open")<0){
-   		 getbtndiv.addClass("open");
-   	 } else if(str.indexOf("open")>0){
-   		 getbtndiv.removeClass("open");
-   	 } 
-	}*/
+	  
+	  $scope.deletewidget= function(id){
+		  console.log(id);
+		  home_factory.delete(id).then(function(data){
+			  $scope.dashboard.widgets= data;
+		  });
+	  }
+	 var watcherflag = true;
+
+	 
+	  $scope.$watch('dashboard.widgets',function(newitems,olditems){
+		 //to do code if require
+	} , true);
+	  
+
 	});
 
-app.factory('home_factory', function($http,cacheService) {
+app.factory('home_factory', function($http,cacheService,$q) {
 
     var userId,createdAT,userName,password,email,firstName,lastName,enabled,
     nationalID,nationalID_expiry,licenseID,licenseID_expiry;
@@ -141,57 +127,81 @@ app.factory('home_factory', function($http,cacheService) {
 
     factory.list = [];
     
-    factory.addwidgettobar = function(type,barid) {
-    	cacheService.update('/dashboard/addwidgettobar/'+type+'_'+barid).then(function(data){
-     		console.log(data);
-     		for (var i=0;i<data.status.length;i++){
-     			factory.add(data.status[i]);
-     		}     		
-     	 });
-        }
+    factory.getdash = function() {
+    	return cacheService.update('/dashboard/getdash').then(function(data){
+       		console.log(data.status.widgets);
+       		factory.list=data.status.widgets;
+       		return factory.list;
+       	 });
     
-    factory.addbar = function() {
-    	cacheService.update('/dashboard/addbar').then(function(data){
-     		console.log(data);
-     		for (var i=0;i<data.status.length;i++){
-     			factory.add(data.status[i]);
-     		}
-     	 });
-        }
-
-    factory.add = function(bar) {
-    	console.log(bar.dashboardbarid);
-	    	
-    	factory.list[bar.dashboardbarid]=bar;
-    	//console.log(factory.list);
         }
     
     factory.getlist = function() {
-            return factory.list;
+    	
+    	console.log("length: "+factory.list.length);
+    	if (!factory.list.length) {
+    		return factory.getdash();
+    		}
+    	return factory.list;
+        }
+
+
+
+    factory.addwidget = function(widgettype) {
+    	console.log(widgettype);
+    	return cacheService.post('/dashboard/addwidget/'+widgettype).then(function(data){
+       		console.log(data.status.widgets);
+       		factory.list=data.status.widgets;
+       		return factory.list;
+       	 });
         }
    
     factory.delete = function(id) {
-    	var newlist=[];
-				   for(var i=0;i<factory.list.length;i++){
-		        		if(factory.list[i] && factory.list[i].dashboardbarid!=id){
-		        			newlist[factory.list[i].dashboardbarid]=factory.list[i];
-		        		}
-		        	}
-		        	//delete factory.list;
-		        	factory.list=newlist;
-		        	console.log(factory.list);
-		            return factory.list;
-			       	
+    	console.log(id);
+    	return cacheService.post('/dashboard/deletewidget/'+id).then(function(data){
+       		console.log(data.status.widgets);
+       		factory.list=data.status.widgets;
+       		return factory.list;
+       	 });       	
     }
+    
+    factory.onchange = function promiseupdate(array1,array2) {
+  	  // perform some asynchronous operation, resolve or reject the promise when appropriate.
+  	  return $q(function(resolve, reject) {
+  		var arr1 = array1;
+    	var arr2 = array2;
+    	var locallist  = []; 
+    	angular.forEach(arr1, function(value1) {
+			angular.forEach(arr2, function(value2) {
+				if (value1.widgetsid === value2.widgetsid ) {
+					if(value1.col != value2.col || value1.row != value2.row 
+							|| value1.sizeX != value2.sizeX || value1.sizeY != value2.sizeY){
+						console.log(value1.type);
+						locallist[value1.widgetsid] = value1;						
+					}
+				}
+			});
+		});
+    	if(locallist.length>0){
+    		factory.update(locallist).then(function(data){
+    			resolve(data);
+    		},function(err){reject(false);})
+    	} else reject(false);
+  	  });
+  	}
+    
+    factory.update = function promiseupdate(obj) {
+    	  // perform some asynchronous operation, resolve or reject the promise when appropriate.
+    	  return $q(function(resolve, reject) {
+    		  cacheService.post('/dashboard/moves',obj).then(function(data){
+    			  factory.list=data.status.widgets;
+    			  resolve(factory.list);
+    	    	},function(error){ console.log(error);
+    	    		reject(obj);})
+    	  });
+    	}
 
-    factory.getuser =function(id) {
-        return factory.list[id];
-    }
- 
 
     return factory;
 });
-
-
-
 

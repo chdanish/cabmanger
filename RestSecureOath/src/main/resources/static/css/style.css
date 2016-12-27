@@ -1,10 +1,10 @@
-/*  body {
-     font-family : arial;
- } */
+ /* body {
+     font-size: 12px;
+ }  */
  .sidebar {
      position : fixed;
      top : 0;
-     left : -160px;;
+     left : -160px;
      transition : 100ms left;
  }
  #navigation-toggle {
@@ -50,13 +50,15 @@
 body, html{
     height: 100%;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 14px;
+    
 }
 
  .bigcontainer{
     position: relative;
-    width: 100%;
+    width: 97%;
+    left :0px;
     height: inherit;
+    /* background-color:aqua; */
 } 
 
 
@@ -91,10 +93,11 @@ img.miniprofileimg {
 }
 .right {
     position: absolute;
-    width: 95%;
+    width: 96%;
    /*  background-color: #b0e0e6; */
-    height:  100% !important;
+    #height:  100% !important;
     margin-top: 50px;
-    right: 0px;
+    left:8px;
+    /* background-color:aliceblue; */
 }
 

@@ -7,6 +7,6 @@ package com.RestSecureOath.domain;
 
 public enum Widgettype {
 	
-	widgetEmployee,widgetAdministrator,widgetGroup,widgetVehicle;
+	widgetEmployee,widgetAdministrator,widgetGroup,widgetVehicle,widgetMinichart;
 	
 }
