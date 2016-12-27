@@ -75,7 +75,10 @@ var topbar = '<div class="navbar navbar-default nav-links xnavbar-fixed-top">'+
 					console.log("ready");
 					console.log(document.getElementById("chartdiv5"));
 					element.parent().parent().parent().prepend(keyEl);
-					scope.data.chart.api.update();
+					var height = scope.data.chart.api.getElement()[0].parentNode.parentNode.parentNode.parentNode.offsetHeight;
+					var width  = scope.data.chart.api.getElement()[0].parentNode.parentNode.parentNode.parentNode.offsetWidth;
+					scope.data.chart.options.chart.height = height -100;
+					scope.data.chart.options.chart.width = width;
 				})
 				
 				//
