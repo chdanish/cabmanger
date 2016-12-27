@@ -51,7 +51,7 @@ app.service('chartService',function() {
 	 }*/
 	  
 	  return {
-		  options:options,
+		  //options:options,
 		  /*api :	api,
 		  update:update,*/
 		  getchart  :getchart,

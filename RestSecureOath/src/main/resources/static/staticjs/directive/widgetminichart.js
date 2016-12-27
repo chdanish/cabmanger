@@ -3,7 +3,7 @@ app.directive('widgetMinichart',[
 	'$compile','$timeout',
 	'cacheService','chartService','chartfactory',
 	function($compile, $timeout, cacheService,chartService,chartfactory) {
-var topbar = '<div class="navbar navbar-default nav-links xnavbar-fixed-top">'+
+var topbar = '<div class="navcontainer"><div class="navbar navbar-default nav-links xnavbar-fixed-top navbarwidget">'+
 '<div class="container">'+
 '<a class="mini-navbar navbar-brand" href="/">'+
     '<img src="http://i.imgur.com/GAQSCtB.png" width="25"'+
@@ -54,7 +54,7 @@ var topbar = '<div class="navbar navbar-default nav-links xnavbar-fixed-top">'+
     '</li>'+
 '</ul>'+
 '</div>'+
-'</div>';
+'</div></div>';
 
 		
 		return {
@@ -77,8 +77,14 @@ var topbar = '<div class="navbar navbar-default nav-links xnavbar-fixed-top">'+
 					element.parent().parent().parent().prepend(keyEl);
 					var height = scope.data.chart.api.getElement()[0].parentNode.parentNode.parentNode.parentNode.offsetHeight;
 					var width  = scope.data.chart.api.getElement()[0].parentNode.parentNode.parentNode.parentNode.offsetWidth;
-					scope.data.chart.options.chart.height = height -100;
-					scope.data.chart.options.chart.width = width;
+					
+					$timeout(function(){
+						scope.data.chart.options.chart.height = height -100;
+						scope.data.chart.options.chart.width = width;
+						scope.data.chart.api.update();
+						console.log("height "+height+" width "+width);
+						
+					}, 100, true);
 				})
 				
 				//
@@ -90,8 +96,7 @@ var topbar = '<div class="navbar navbar-default nav-links xnavbar-fixed-top">'+
 						options : mychart,
 						data	:chartService.getchart,
 						//api		: '=?',
-				};
-				console.log(scope.data);
+				};				
 
 			},
 		};
